@@ -269,6 +269,7 @@ class SanskritiAPITester:
 
 def main():
     print("🚀 Starting Sanskriti Travel Planner API Tests")
+    print("🎯 PRIORITY: Verifying AI Itinerary Generation Fix")
     print("=" * 60)
     
     tester = SanskritiAPITester()
@@ -279,7 +280,11 @@ def main():
     # Test 2: Community hosts
     tester.test_community_hosts()
     
-    # Test 3: Valid itinerary generation (main functionality)
+    # Test 3: CRITICAL - Valid itinerary generation (main functionality)
+    print(f"\n{'='*60}")
+    print(f"🔥 CRITICAL TEST: AI ITINERARY GENERATION")
+    print(f"{'='*60}")
+    
     success, itinerary_response = tester.test_itinerary_generation()
     itinerary_id = None
     if success and isinstance(itinerary_response, dict):
@@ -291,7 +296,13 @@ def main():
     else:
         print("\n⚠️  Skipping itinerary retrieval test - no valid ID from generation")
     
-    # Test 5: Invalid data handling
+    # Test 5: AI content quality with different themes
+    print(f"\n{'='*60}")
+    print(f"🎨 AI CONTENT QUALITY TESTS")
+    print(f"{'='*60}")
+    tester.test_ai_content_quality()
+    
+    # Test 6: Invalid data handling
     tester.test_invalid_itinerary_generation()
     
     # Print final results
@@ -301,11 +312,19 @@ def main():
     print(f"Tests Passed: {tester.tests_passed}")
     print(f"Success Rate: {(tester.tests_passed/tester.tests_run)*100:.1f}%")
     
+    # Critical success evaluation
+    if success:
+        print("🎉 CRITICAL SUCCESS: AI itinerary generation is working!")
+        print("✅ The main AI fix has been verified successfully")
+    else:
+        print("❌ CRITICAL FAILURE: AI itinerary generation is still broken!")
+        print("🚨 The main AI fix needs further attention")
+    
     if tester.tests_passed == tester.tests_run:
-        print("🎉 All tests passed!")
+        print("🏆 All tests passed!")
         return 0
     else:
-        print("❌ Some tests failed - check logs above")
+        print("⚠️  Some tests failed - check logs above")
         return 1
 
 if __name__ == "__main__":
