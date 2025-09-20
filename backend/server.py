@@ -82,7 +82,7 @@ def get_llm_chat():
 
 # Helper Functions
 def generate_trip_prompt(request: TripRequest) -> str:
-    base_prompt = f"""Create a detailed {request.duration}-day itinerary for {request.destination} with a budget of ₹{request.budget:,} focusing on {request.theme} experiences."""
+    base_prompt = f"""You are Sakhi, an AI travel planner for solo female travelers in India. Create a detailed {request.duration}-day itinerary for {request.destination} with a budget of ₹{request.budget:,} focusing on {request.theme} experiences."""
     
     if request.travel_mode == "solo_female":
         base_prompt += f""" This is for a solo female traveler. IMPORTANT REQUIREMENTS:
@@ -95,57 +95,82 @@ def generate_trip_prompt(request: TripRequest) -> str:
     
     base_prompt += f"""
 
-    Return a JSON response with this exact structure:
+    CRITICAL: Respond ONLY with valid JSON. No additional text before or after the JSON.
+
+    JSON Structure:
     {{
         "days": [
             {{
                 "day": 1,
                 "activities": [
                     {{
-                        "time": "10:00 AM",
-                        "activity": "Visit Red Fort",
-                        "description": "Explore the historic Mughal architecture",
-                        "location": "Red Fort, Delhi",
-                        "cost": 50,
+                        "time": "9:00 AM",
+                        "activity": "Visit Amber Fort",
+                        "description": "Explore the magnificent hilltop fort with stunning architecture",
+                        "location": "Amber Fort, Jaipur",
+                        "cost": 200,
+                        "safety_level": "high",
+                        "duration": "3 hours"
+                    }},
+                    {{
+                        "time": "2:00 PM", 
+                        "activity": "City Palace Tour",
+                        "description": "Royal palace complex with museums and courtyards",
+                        "location": "City Palace, Jaipur",
+                        "cost": 300,
                         "safety_level": "high",
                         "duration": "2 hours"
                     }}
                 ],
                 "accommodation": {{
-                    "name": "Hotel Name",
-                    "type": "hotel/guesthouse",
-                    "location": "Area name",
-                    "cost": 2500,
+                    "name": "Hotel Pearl Palace",
+                    "type": "heritage hotel",
+                    "location": "Pink City, Jaipur",
+                    "cost": 3500,
                     "safety_rating": 5,
                     "women_friendly": true,
-                    "amenities": ["WiFi", "24/7 Security"]
+                    "amenities": ["WiFi", "24/7 Security", "Women-only floors"]
                 }},
                 "meals": [
                     {{
-                        "meal": "breakfast/lunch/dinner",
-                        "restaurant": "Restaurant name",
+                        "meal": "breakfast",
+                        "restaurant": "Hotel Restaurant",
+                        "cuisine": "Continental",
+                        "cost": 500,
+                        "location": "Hotel Pearl Palace"
+                    }},
+                    {{
+                        "meal": "lunch",
+                        "restaurant": "Chokhi Dhani",
+                        "cuisine": "Rajasthani",
+                        "cost": 800,
+                        "location": "Near City Palace"
+                    }},
+                    {{
+                        "meal": "dinner",
+                        "restaurant": "Peacock Rooftop",
                         "cuisine": "North Indian",
-                        "cost": 400,
-                        "location": "Near hotel/attraction"
+                        "cost": 700,
+                        "location": "Hawa Mahal area"
                     }}
                 ],
-                "estimated_cost": 3000,
-                "safety_tips": ["Stay in groups after 8 PM", "Keep emergency contacts handy"]
+                "estimated_cost": 6000,
+                "safety_tips": ["Use prepaid taxis", "Stay in well-lit market areas", "Keep hotel contact card"]
             }}
         ],
-        "total_cost": 15000,
-        "safety_score": 85,
+        "total_cost": {min(request.budget, request.budget * 0.9)},
+        "safety_score": 88,
         "community_experiences": [
             {{
-                "activity": "Village pottery workshop",
-                "host": "Local artisan Meera",
-                "cost": 800,
-                "impact": "Supports local craftswoman"
+                "activity": "Block printing workshop",
+                "host": "Local artisan Sunita",
+                "cost": 1200,
+                "impact": "Supports traditional craftswomen"
             }}
         ]
     }}
     
-    Ensure all costs are in Indian Rupees and realistic for {request.destination}. Total cost should not exceed the budget of ₹{request.budget:,}."""
+    Create {request.duration} days. Keep total cost under ₹{request.budget:,}. Include realistic activities for {request.destination}."""
     
     return base_prompt
 
