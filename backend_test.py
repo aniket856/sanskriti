@@ -190,6 +190,66 @@ class SanskritiAPITester:
             200
         )
 
+    def test_ai_content_quality(self):
+        """Test AI content quality with different themes and scenarios"""
+        test_scenarios = [
+            {
+                "name": "Spiritual Journey - Rishikesh",
+                "data": {
+                    "destination": "Rishikesh, Uttarakhand",
+                    "budget": 15000,
+                    "duration": 2,
+                    "theme": "spiritual",
+                    "travel_mode": "solo_female",
+                    "period_friendly": False,
+                    "special_preferences": "Focus on yoga and meditation"
+                }
+            },
+            {
+                "name": "Adventure Theme - Manali",
+                "data": {
+                    "destination": "Manali, Himachal Pradesh",
+                    "budget": 35000,
+                    "duration": 4,
+                    "theme": "adventure",
+                    "travel_mode": "solo_female",
+                    "period_friendly": True,
+                    "special_preferences": "Mountain activities and trekking"
+                }
+            }
+        ]
+        
+        for scenario in test_scenarios:
+            print(f"\n🔍 Testing AI Quality: {scenario['name']}")
+            success, response = self.run_test(
+                f"AI Quality - {scenario['name']}",
+                "POST",
+                "itinerary/generate",
+                200,
+                data=scenario['data'],
+                timeout=60
+            )
+            
+            if success and isinstance(response, dict):
+                days = response.get('days', [])
+                if len(days) > 0:
+                    print(f"✅ Generated {len(days)} days for {scenario['name']}")
+                    # Check theme relevance in activities
+                    first_day = days[0]
+                    activities = first_day.get('activities', [])
+                    if activities:
+                        first_activity = activities[0].get('activity', '').lower()
+                        theme = scenario['data']['theme']
+                        print(f"   First activity: {activities[0].get('activity', 'N/A')}")
+                        if theme in ['spiritual'] and any(word in first_activity for word in ['yoga', 'meditation', 'temple', 'ganga']):
+                            print(f"✅ Theme-relevant activity detected")
+                        elif theme in ['adventure'] and any(word in first_activity for word in ['trek', 'adventure', 'mountain', 'hiking']):
+                            print(f"✅ Theme-relevant activity detected")
+                else:
+                    print(f"❌ Empty days array for {scenario['name']}")
+            else:
+                print(f"❌ Failed to generate itinerary for {scenario['name']}")
+
     def test_invalid_itinerary_generation(self):
         """Test itinerary generation with invalid data"""
         invalid_data = {
