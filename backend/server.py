@@ -6,10 +6,13 @@ import os
 import logging
 from pathlib import Path
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 import uuid
 from datetime import datetime, timezone
 import json
+import googlemaps
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
 
 # Load environment variables
 ROOT_DIR = Path(__file__).parent
@@ -17,6 +20,15 @@ load_dotenv(ROOT_DIR / '.env')
 
 # Initialize LLM integration
 from emergentintegrations.llm.chat import LlmChat, UserMessage
+
+# Initialize Google Maps client
+try:
+    gmaps = googlemaps.Client(key=os.environ.get('GOOGLE_PLACES_API_KEY'))
+    GOOGLE_PLACES_ENABLED = True
+except Exception as e:
+    logging.warning(f"Google Places API not available: {str(e)}")
+    gmaps = None
+    GOOGLE_PLACES_ENABLED = False
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
@@ -28,6 +40,9 @@ app = FastAPI()
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
+
+# Thread pool for external API calls
+executor = ThreadPoolExecutor(max_workers=3)
 
 # Pydantic Models
 class TripRequest(BaseModel):
