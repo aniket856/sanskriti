@@ -405,10 +405,140 @@ def get_llm_chat():
     return LlmChat(
         api_key=os.environ.get('EMERGENT_LLM_KEY'),
         session_id=str(uuid.uuid4()),
-        system_message="""You are Sakhi, an AI travel assistant specialized in planning trips for Indian travelers. 
-        You excel at creating detailed, culturally sensitive itineraries that prioritize safety, especially for solo female travelers.
-        Always provide responses in valid JSON format with proper structure for itineraries."""
+        system_message="""You are Sakhi, an AI travel assistant specialized in planning trips for Indian travelers, especially solo female travelers.
+        
+        CRITICAL INSTRUCTIONS:
+        - You will receive REAL DATA about hotels, restaurants, and attractions
+        - Use ONLY the real names provided in the data
+        - DO NOT create placeholder names or generic suggestions
+        - If real data is provided, use it exactly as given
+        - Focus on safety, authenticity, and cultural sensitivity
+        - Always provide responses in valid JSON format"""
     ).with_model("openai", "gpt-4o-mini")
+
+async def get_real_travel_data(destination: str, budget: int, duration: int, theme: str, is_solo_female: bool) -> Dict[str, Any]:
+    """Fetch all real travel data asynchronously"""
+    loop = asyncio.get_event_loop()
+    
+    # Calculate budget per night for accommodation
+    budget_per_night = int(budget * 0.4 / duration)  # 40% of budget for accommodation
+    
+    # Fetch real data concurrently
+    accommodations_task = loop.run_in_executor(
+        executor, get_real_accommodations, destination, budget_per_night, is_solo_female
+    )
+    restaurants_task = loop.run_in_executor(
+        executor, get_real_restaurants, destination, "restaurant", None
+    )
+    attractions_task = loop.run_in_executor(
+        executor, get_real_attractions, destination, theme
+    )
+    
+    # Wait for all data to be fetched
+    accommodations, restaurants, attractions = await asyncio.gather(
+        accommodations_task, restaurants_task, attractions_task
+    )
+    
+    return {
+        "accommodations": accommodations,
+        "restaurants": restaurants,
+        "attractions": attractions
+    }
+
+def generate_enhanced_trip_prompt(request: TripRequest, real_data: Dict[str, Any]) -> str:
+    """Generate AI prompt with real data integration"""
+    
+    accommodations = real_data.get("accommodations", [])
+    restaurants = real_data.get("restaurants", [])
+    attractions = real_data.get("attractions", [])
+    
+    base_prompt = f"""You are Sakhi, creating a {request.duration}-day itinerary for {request.destination} with budget ₹{request.budget:,} focusing on {request.theme} theme.
+
+REAL DATA TO USE (MANDATORY):
+
+REAL HOTELS (use these exact names):
+{json.dumps(accommodations, indent=2)}
+
+REAL RESTAURANTS (use these exact names):
+{json.dumps(restaurants, indent=2)}
+
+REAL ATTRACTIONS (use these exact names):
+{json.dumps(attractions, indent=2)}
+
+STRICT REQUIREMENTS FOR SOLO FEMALE TRAVELER:
+- Prioritize women-safe accommodations with high ratings
+- Include well-lit, populated areas for activities
+- Provide emergency contacts and safety tips
+{"- PERIOD-FRIENDLY: Include clean restrooms, nearby pharmacies, comfortable spaces" if request.period_friendly else ""}
+- Use reliable transportation options
+- Focus on empowering experiences
+
+CRITICAL INSTRUCTIONS:
+1. Use ONLY the real hotel names from the data above
+2. Use ONLY the real restaurant names from the data above  
+3. Use ONLY the real attraction names from the data above
+4. NO placeholders or generic names allowed
+5. Include actual ratings and costs from the data
+6. Distribute activities across all {request.duration} days
+
+RESPONSE FORMAT (JSON ONLY):
+{{
+    "days": [
+        {{
+            "day": 1,
+            "activities": [
+                {{
+                    "time": "9:00 AM",
+                    "activity": "[USE EXACT ATTRACTION NAME FROM DATA]",
+                    "description": "[USE DESCRIPTION FROM DATA]",
+                    "location": "[USE LOCATION FROM DATA]",
+                    "cost": [USE COST FROM DATA],
+                    "safety_level": "high",
+                    "duration": "[USE DURATION FROM DATA]"
+                }}
+            ],
+            "accommodation": {{
+                "name": "[USE EXACT HOTEL NAME FROM DATA]",
+                "type": "hotel",
+                "location": "[USE LOCATION FROM DATA]",
+                "cost": [USE COST FROM DATA],
+                "safety_rating": [USE RATING FROM DATA],
+                "women_friendly": true,
+                "amenities": [USE AMENITIES FROM DATA]
+            }},
+            "meals": [
+                {{
+                    "meal": "breakfast",
+                    "restaurant": "[USE EXACT RESTAURANT NAME FROM DATA]",
+                    "cuisine": "[USE CUISINE FROM DATA]",
+                    "cost": [USE COST FROM DATA],
+                    "location": "[USE LOCATION FROM DATA]"
+                }}
+            ],
+            "estimated_cost": [CALCULATE TOTAL DAY COST],
+            "safety_tips": [
+                "Use the hotel's recommended transportation",
+                "Stay in groups in crowded areas",
+                "Keep emergency contacts accessible",
+                {"Locate clean restrooms and nearby pharmacies" if request.period_friendly else "Share your itinerary with hotel concierge"}
+            ]
+        }}
+    ],
+    "total_cost": [CALCULATE TOTAL ITINERARY COST],
+    "safety_score": 88,
+    "community_experiences": [
+        {{
+            "activity": "Local artisan workshop",
+            "host": "Community partner",
+            "cost": 800,
+            "impact": "Supports local families and traditional crafts"
+        }}
+    ]
+}}
+
+Create exactly {request.duration} days using the real data provided. Keep total cost under ₹{request.budget:,}."""
+
+    return base_prompt
 def generate_trip_prompt(request: TripRequest) -> str:
     base_prompt = f"""You are Sakhi, an AI travel planner for solo female travelers in India. Create a detailed {request.duration}-day itinerary for {request.destination} with a budget of ₹{request.budget:,} focusing on {request.theme} experiences."""
     
