@@ -655,9 +655,19 @@ async def root():
 @api_router.post("/itinerary/generate", response_model=Itinerary)
 async def generate_itinerary(request: TripRequest):
     try:
-        # Generate AI itinerary
+        # Fetch real travel data first
+        is_solo_female = request.travel_mode == "solo_female"
+        real_data = await get_real_travel_data(
+            request.destination, 
+            request.budget, 
+            request.duration, 
+            request.theme, 
+            is_solo_female
+        )
+        
+        # Generate AI itinerary with real data
         chat = get_llm_chat()
-        prompt = generate_trip_prompt(request)
+        prompt = generate_enhanced_trip_prompt(request, real_data)
         
         user_message = UserMessage(text=prompt)
         response = await chat.send_message(user_message)
