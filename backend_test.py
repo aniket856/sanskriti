@@ -66,7 +66,7 @@ class SanskritiAPITester:
         )
 
     def test_itinerary_generation(self):
-        """Test itinerary generation with realistic data"""
+        """CRITICAL TEST: Test itinerary generation with realistic data - VERIFY AI FIX"""
         test_data = {
             "destination": "Jaipur, Rajasthan",
             "budget": 25000,
@@ -74,13 +74,13 @@ class SanskritiAPITester:
             "theme": "heritage",
             "travel_mode": "solo_female",
             "period_friendly": True,
-            "special_preferences": "Vegetarian food only, photography focus"
+            "special_preferences": "Focus on women-safe areas and period-friendly facilities"
         }
         
-        print(f"   Request data: {json.dumps(test_data, indent=2)}")
+        print(f"   🎯 CRITICAL AI FIX TEST - Request data: {json.dumps(test_data, indent=2)}")
         
         success, response = self.run_test(
-            "Itinerary Generation",
+            "🔥 CRITICAL: AI Itinerary Generation",
             "POST",
             "itinerary/generate",
             200,
@@ -89,46 +89,97 @@ class SanskritiAPITester:
         )
         
         if success and isinstance(response, dict):
-            # Validate response structure
+            print(f"\n🔍 DETAILED RESPONSE VALIDATION:")
+            
+            # CRITICAL CHECK 1: Validate response structure
             required_fields = ['id', 'destination', 'budget', 'duration', 'theme', 'days', 'community_impact']
             missing_fields = [field for field in required_fields if field not in response]
             
             if missing_fields:
-                print(f"⚠️  Missing required fields: {missing_fields}")
+                print(f"❌ CRITICAL: Missing required fields: {missing_fields}")
+                return False, response
             else:
                 print(f"✅ All required fields present")
                 
-            # Check if days array is populated
+            # CRITICAL CHECK 2: Days array must NOT be empty (main fix verification)
             days = response.get('days', [])
-            print(f"   Generated {len(days)} days of itinerary")
+            print(f"   📅 Generated {len(days)} days of itinerary (Expected: {test_data['duration']})")
             
             if len(days) == 0:
-                print(f"⚠️  WARNING: Empty days array - possible AI parsing issue")
+                print(f"❌ CRITICAL FAILURE: Empty days array - AI parsing still broken!")
+                return False, response
+            elif len(days) != test_data['duration']:
+                print(f"⚠️  WARNING: Expected {test_data['duration']} days, got {len(days)}")
             else:
-                # Check first day structure
-                first_day = days[0]
-                day_fields = ['day', 'activities', 'accommodation', 'meals', 'estimated_cost']
-                day_missing = [field for field in day_fields if field not in first_day]
-                if day_missing:
-                    print(f"⚠️  Day structure missing fields: {day_missing}")
+                print(f"✅ CRITICAL SUCCESS: Days array populated correctly!")
+                
+            # CRITICAL CHECK 3: Validate each day structure
+            for i, day in enumerate(days):
+                day_num = day.get('day', 0)
+                activities = day.get('activities', [])
+                accommodation = day.get('accommodation', {})
+                meals = day.get('meals', [])
+                safety_tips = day.get('safety_tips', [])
+                
+                print(f"   Day {day_num}: {len(activities)} activities, {len(meals)} meals, {len(safety_tips)} safety tips")
+                
+                # Check for empty critical sections
+                if not activities:
+                    print(f"❌ CRITICAL: Day {day_num} has no activities")
+                    return False, response
+                if not accommodation:
+                    print(f"❌ CRITICAL: Day {day_num} has no accommodation")
+                    return False, response
+                if not meals:
+                    print(f"❌ CRITICAL: Day {day_num} has no meals")
+                    return False, response
+                    
+                # Validate activity structure
+                first_activity = activities[0] if activities else {}
+                activity_fields = ['time', 'activity', 'description', 'location', 'cost']
+                activity_missing = [field for field in activity_fields if field not in first_activity]
+                if activity_missing:
+                    print(f"⚠️  Day {day_num} activity missing fields: {activity_missing}")
                 else:
-                    print(f"✅ Day structure complete")
-                    print(f"   Day 1 has {len(first_day.get('activities', []))} activities")
+                    print(f"✅ Day {day_num} activity structure complete")
             
-            # Check community impact
+            # CRITICAL CHECK 4: Period-friendly features verification
+            if test_data['period_friendly']:
+                period_friendly = response.get('period_friendly', False)
+                if not period_friendly:
+                    print(f"❌ CRITICAL: Period-friendly flag not set despite request")
+                    return False, response
+                else:
+                    print(f"✅ Period-friendly features enabled")
+            
+            # CRITICAL CHECK 5: Safety score for solo female travel
+            safety_score = response.get('safety_score', 0)
+            if safety_score < 70:  # Minimum for solo female travel
+                print(f"⚠️  WARNING: Low safety score for solo female travel: {safety_score}%")
+            else:
+                print(f"✅ Good safety score: {safety_score}%")
+            
+            # CRITICAL CHECK 6: Community impact calculation
             community_impact = response.get('community_impact', {})
             impact_fields = ['total_impact', 'families_benefited', 'impact_percentage']
             impact_missing = [field for field in impact_fields if field not in community_impact]
             if impact_missing:
-                print(f"⚠️  Community impact missing fields: {impact_missing}")
+                print(f"❌ CRITICAL: Community impact missing fields: {impact_missing}")
+                return False, response
             else:
                 print(f"✅ Community impact structure complete")
-                print(f"   Families benefited: {community_impact.get('families_benefited')}")
-                print(f"   Total impact: ₹{community_impact.get('total_impact')}")
+                families = community_impact.get('families_benefited', 0)
+                impact = community_impact.get('total_impact', 0)
+                percentage = community_impact.get('impact_percentage', 0)
+                print(f"   👥 Families benefited: {families}")
+                print(f"   💰 Total impact: ₹{impact:,}")
+                print(f"   📊 Impact percentage: {percentage}%")
             
+            print(f"\n🎉 CRITICAL TEST PASSED: AI itinerary generation is working correctly!")
             return success, response
-        
-        return success, response
+        else:
+            print(f"❌ CRITICAL FAILURE: Invalid response format or API error")
+            return False, response
 
     def test_itinerary_retrieval(self, itinerary_id):
         """Test retrieving a specific itinerary"""
