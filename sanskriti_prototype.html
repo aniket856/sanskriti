@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanskriti Travel Planner</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/tailwind.min.css" />
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      {`
+        const { useState } = React;
+
+        function LandingPage({ onTravelModeSelect }) {
+          return (
+            <div className="container mx-auto">
+              <h1 className="text-2xl font-bold">Sanskriti Travel Planner</h1>
+              <p>Plan your dream trip to India with our AI-powered itinerary generator.</p>
+              <div className="flex justify-center">
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={() => onTravelModeSelect('solo_female')}
+                >
+                  Solo Female
+                </button>
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={() => onTravelModeSelect('friend_group')}
+                >
+                  Friend Group
+                </button>
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={() => onTravelModeSelect('couple')}
+                >
+                  Couple
+                </button>
+              </div>
+            </div>
+          );
+        }
+
+        function PlanningForm({ onItineraryGenerated }) {
+          const [destination, setDestination] = useState('');
+          const [budget, setBudget] = useState(5000);
+          const [duration, setDuration] = useState(1);
+          const [theme, setTheme] = useState('Heritage');
+
+          const handleSubmit = (e) => {
+            e.preventDefault();
+
+            let promptExtras = '';
+
+            const prompt = `Create a detailed ${duration}-day itinerary for ${destination} with budget ₹${budget} focusing on ${theme} experiences. ${promptExtras} Format response as JSON with daily activities, costs, and safety tips.`;
+
+            console.log('Prompt:', prompt);
+
+            const itineraryData = {
+              itinerary: [
+                {
+                  day: 1,
+                  activities: ['Visit the Taj Mahal', 'Explore Agra Fort'],
+                  cost: 5000,
+                  safetyTips: ['Be aware of your surroundings', 'Stay hydrated']
+                },
+                {
+                  day: 2,
+                  activities: ['Visit Fatehpur Sikri', 'Shop for souvenirs'],
+                  cost: 3000,
+                  safetyTips: ['Bargain before buying', 'Keep your belongings safe']
+                }
+              ]
+            };
+            onItineraryGenerated(itineraryData);
+          };
+
+          return (
+            <div className="container mx-auto">
+              <h2 className="text-xl font-bold">Plan Your Trip</h2>
+              <form onSubmit={handleSubmit}>
+                <div className="mb-4">
+                  <label htmlFor="destination" className="block text-gray-700 text-sm font-bold mb-2">Destination:</label>
+                  <select
+                    id="destination"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    value={destination}
+                    onChange={(e) => setDestination(e.target.value)}
+                  >
+                    <option value="">Select Destination</option>
+                    <option value="Rajasthan">Rajasthan</option>
+                    <option value="Goa">Goa</option>
+                    <option value="Kerala">Kerala</option>
+                    <option value="Himachal">Himachal</option>
+                    <option value="Varanasi">Varanasi</option>
+                  </select>
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="budget" className="block text-gray-700 text-sm font-bold mb-2">Budget (₹):</label>
+                  <input
+                    type="range"
+                    id="budget"
+                    className="w-full"
+                    min="5000"
+                    max="100000"
+                    value={budget}
+                    onChange={(e) => setBudget(parseInt(e.target.value))}
+                  />
+                  <span>{budget}</span>
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="duration" className="block text-gray-700 text-sm font-bold mb-2">Duration (Days):</label>
+                  <input
+                    type="number"
+                    id="duration"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    min="1"
+                    max="14"
+                    value={duration}
+                    onChange={(e) => setDuration(parseInt(e.target.value))}
+                  />
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="theme" className="block text-gray-700 text-sm font-bold mb-2">Theme:</label>
+                  <select
+                    id="theme"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    value={theme}
+                    onChange={(e) => setTheme(e.target.value)}
+                  >
+                    <option value="Heritage">Heritage</option>
+                    <option value="Adventure">Adventure</option>
+                    <option value="Nightlife">Nightlife</option>
+                    <option value="Spiritual">Spiritual</option>
+                    <option value="Culinary">Culinary</option>
+                  </select>
+                </div>
+                <button
+                  type="submit"
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                  Generate Itinerary
+                </button>
+              </form>
+            </div>
+          );
+        }
+
+        function ItineraryDisplay({ itinerary }) {
+          const mockWeatherData = {
+            temperature: 25,
+            condition: 'Sunny',
+            humidity: 60,
+            windSpeed: 10
+          };
+
+          const mockPlaceData = {
+            name: 'Taj Mahal',
+            address: 'Agra, Uttar Pradesh',
+            rating: 4.5,
+            imageUrl: 'https://example.com/tajmahal.jpg'
+          };
+
+          const mockHotelData = [
+            {
+              id: 1,
+              name: 'The Oberoi Amarvilas',
+              rating: 5,
+              imageUrl: 'https://example.com/oberoi.jpg',
+              price: 15000
+            },
+            {
+              id: 2,
+              name: 'ITC Mughal',
+              rating: 4.5,
+              imageUrl: 'https://example.com/itc.jpg',
+              price: 10000
+            }
+          ];
+
+          const mockTransportData = [
+            {
+              id: 1,
+              type: 'Train',
+              name: 'Shatabdi Express',
+              departureTime: '06:00',
+              arrivalTime: '08:00',
+              price: 1000
+            },
+            {
+              id: 2,
+              type: 'Bus',
+              name: 'Volvo AC Bus',
+              departureTime: '07:00',
+              arrivalTime: '10:00',
+              price: 500
+            }
+          ];
+
+          const mockLocalExperienceData = [
+            {
+              id: 1,
+              name: 'Taj Mahal Sunrise Tour',
+              description: 'Witness the breathtaking sunrise at the Taj Mahal',
+              price: 2000
+            },
+            {
+              id: 2,
+              name: 'Agra Fort Guided Tour',
+              description: 'Explore the historical Agra Fort with a knowledgeable guide',
+              price: 1000
+            }
+          ];
+
+          return (
+            <div className="container mx-auto">
+              <h2 className="text-xl font-bold">Your Itinerary</h2>
+              {itinerary && itinerary.length > 0 ? (
+                itinerary.map((day) => (
+                  <div key={day.day} className="mb-4">
+                    <h3 className="text-lg font-bold">Day {day.day}</h3>
+                    <ul>
+                      {day.activities.map((activity, index) => (
+                        <li key={index}>{activity}</li>
+                      ))}
+                    </ul>
+                    <p>Cost: ₹{day.cost}</p>
+                    <p>Safety Tips: {day.safetyTips.join(', ')}</p>
+                  </div>
+                ))
+              ) : (
+                <p>No itinerary data available.</p>
+              )}
+
+              <h3 className="text-lg font-bold">Weather Data</h3>
+              <p>Temperature: {mockWeatherData.temperature}°C</p>
+              <p>Condition: {mockWeatherData.condition}</p>
+
+              <h3 className="text-lg font-bold">Place Data</h3>
+              <p>Name: {mockPlaceData.name}</p>
+              <p>Address: {mockPlaceData.address}</p>
+
+              <h3 className="text-lg font-bold">Hotel Data</h3>
+              <ul>
+                {mockHotelData.map((hotel) => (
+                  <li key={hotel.id}>{hotel.name} - ₹{hotel.price}</li>
+                ))}
+              </ul>
+
+              <h3 className="text-lg font-bold">Transport Data</h3>
+              <ul>
+                {mockTransportData.map((transport) => (
+                  <li key={transport.id}>{transport.type}: {transport.name} - ₹{transport.price}</li>
+                ))}
+              </ul>
+
+              <h3 className="text-lg font-bold">Local Experience Data</h3>
+              <ul>
+                {mockLocalExperienceData.map((experience) => (
+                  <li key={experience.id}>{experience.name} - ₹{experience.price}</li>
+                ))}
+              </ul>
+            </div>
+          );
+        }
+
+        function LanguageSelector() {
+          const [language, setLanguage] = useState('en');
+
+          const handleLanguageChange = (e) => {
+            setLanguage(e.target.value);
+            // Implement language change logic here
+            console.log('Language changed to:', e.target.value);
+          };
+
+          return (
+            <div className="container mx-auto">
+              <label htmlFor="language" className="block text-gray-700 text-sm font-bold mb-2">Select Language:</label>
+              <select
+                id="language"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                value={language}
+                onChange={handleLanguageChange}
+              >
+                <option value="en">English</option>
+                <option value="hi">Hindi</option>
+                <option value="te">Telugu</option>
+                <option value="ta">Tamil</option>
+                <option value="bn">Bengali</option>
+              </select>
+            </div>
+          );
+        }
+
+        function CommunityImpactDashboard() {
+          return (
+            <div className="container mx-auto">
+              <h2 className="text-xl font-bold">Community Impact</h2>
+              <p>Your trip will benefit 3 local families.</p>
+              <p>Local host profiles with photos and stories will be displayed here.</p>
+              <p>Impact visualization (charts/graphics) will be displayed here.</p>
+              <p>Direct booking options for community experiences will be displayed here.</p>
+            </div>
+          );
+        }
+
+        function App() {
+          const [travelMode, setTravelMode] = useState('');
+          const [itinerary, setItinerary] = useState(null);
+
+          const handleItineraryGenerated = (itineraryData) => {
+            setItinerary(itineraryData);
+          };
+
+          return (
+            <div className="container mx-auto">
+              <LanguageSelector />
+              {itinerary ? (
+                <>
+                  <ItineraryDisplay itinerary={itinerary} />
+                  <CommunityImpactDashboard />
+                </>
+              ) : travelMode ? (
+                <PlanningForm onItineraryGenerated={handleItineraryGenerated} />
+              ) : (
+                <LandingPage onTravelModeSelect={(mode) => setTravelMode(mode)} />
+              )}
+            </div>
+          );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+      `}
+    </script>
+</body>
+</html>
