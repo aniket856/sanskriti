@@ -121,10 +121,10 @@ const LandingPage = () => {
 
 const TripPlanner = () => {
   const [formData, setFormData] = useState({
-    destination: "",
+    destination: "Goa", // Set default destination
     budget: [25000],
     duration: 3,
-    theme: "",
+    theme: "heritage", // Set default theme
     travel_mode: "solo_female",
     period_friendly: false,
     special_preferences: ""
