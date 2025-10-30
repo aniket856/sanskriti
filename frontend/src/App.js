@@ -316,7 +316,6 @@ const TripPlanner = () => {
               <Button 
                 type="submit" 
                 className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 text-lg font-semibold rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl"
-                disabled={!formData.destination || !formData.theme}
               >
                 <MapPin className="mr-2 h-5 w-5" />
                 Generate My Perfect Itinerary
