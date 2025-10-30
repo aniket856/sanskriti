@@ -210,7 +210,10 @@ const TripPlanner = () => {
                 <Label htmlFor="destination" className="text-lg font-semibold text-gray-700">
                   Where would you like to go?
                 </Label>
-                <Select onValueChange={(value) => setFormData({...formData, destination: value})}>
+                <Select 
+                  value={formData.destination}
+                  onValueChange={(value) => setFormData({...formData, destination: value})}
+                >
                   <SelectTrigger className="w-full p-4 text-lg border-orange-200 focus:border-orange-500">
                     <SelectValue placeholder="Choose your destination" />
                   </SelectTrigger>
