@@ -149,10 +149,11 @@ const TripPlanner = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Form submitted with data:", formData);
     setLoading(true);
     
     try {
-      const response = await axios.post(`${API}/itinerary/generate`, {
+      const requestData = {
         destination: formData.destination,
         budget: formData.budget[0],
         duration: formData.duration,
@@ -160,11 +161,16 @@ const TripPlanner = () => {
         travel_mode: formData.travel_mode,
         period_friendly: formData.period_friendly,
         special_preferences: formData.special_preferences
-      });
+      };
       
+      console.log("Sending request:", requestData);
+      const response = await axios.post(`${API}/itinerary/generate`, requestData);
+      
+      console.log("Received response:", response.data);
       setItinerary(response.data);
     } catch (error) {
       console.error("Error generating itinerary:", error);
+      alert(`Error: ${error.response?.data?.detail || error.message}`);
     } finally {
       setLoading(false);
     }
