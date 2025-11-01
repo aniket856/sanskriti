@@ -446,42 +446,18 @@ async def get_real_travel_data(destination: str, budget: int, duration: int, the
     }
 
 def generate_enhanced_trip_prompt(request: TripRequest, real_data: Dict[str, Any]) -> str:
-    """Generate AI prompt with real data integration"""
+    """Generate optimized AI prompt for faster response"""
     
-    accommodations = real_data.get("accommodations", [])
-    restaurants = real_data.get("restaurants", [])
-    attractions = real_data.get("attractions", [])
-    
-    base_prompt = f"""You are Sakhi, creating a {request.duration}-day itinerary for {request.destination} with budget ₹{request.budget:,} focusing on {request.theme} theme.
+    # Use fallback data directly for speed
+    base_prompt = f"""Create a {request.duration}-day itinerary for {request.destination}, budget ₹{request.budget:,}, {request.theme} theme.
 
-REAL DATA TO USE (MANDATORY):
+SOLO FEMALE REQUIREMENTS:
+- Women-safe accommodations only
+- Well-lit areas and reliable transport
+{"- Period-friendly facilities (clean restrooms, pharmacies)" if request.period_friendly else ""}
+- Safety tips for each day
 
-REAL HOTELS (use these exact names):
-{json.dumps(accommodations, indent=2)}
-
-REAL RESTAURANTS (use these exact names):
-{json.dumps(restaurants, indent=2)}
-
-REAL ATTRACTIONS (use these exact names):
-{json.dumps(attractions, indent=2)}
-
-STRICT REQUIREMENTS FOR SOLO FEMALE TRAVELER:
-- Prioritize women-safe accommodations with high ratings
-- Include well-lit, populated areas for activities
-- Provide emergency contacts and safety tips
-{"- PERIOD-FRIENDLY: Include clean restrooms, nearby pharmacies, comfortable spaces" if request.period_friendly else ""}
-- Use reliable transportation options
-- Focus on empowering experiences
-
-CRITICAL INSTRUCTIONS:
-1. Use ONLY the real hotel names from the data above
-2. Use ONLY the real restaurant names from the data above  
-3. Use ONLY the real attraction names from the data above
-4. NO placeholders or generic names allowed
-5. Include actual ratings and costs from the data
-6. Distribute activities across all {request.duration} days
-
-RESPONSE FORMAT (JSON ONLY):
+Return ONLY this JSON (no extra text):
 {{
     "days": [
         {{
@@ -489,54 +465,49 @@ RESPONSE FORMAT (JSON ONLY):
             "activities": [
                 {{
                     "time": "9:00 AM",
-                    "activity": "[USE EXACT ATTRACTION NAME FROM DATA]",
-                    "description": "[USE DESCRIPTION FROM DATA]",
-                    "location": "[USE LOCATION FROM DATA]",
-                    "cost": [USE COST FROM DATA],
+                    "activity": "Visit main attraction",
+                    "description": "Explore popular site",
+                    "location": "{request.destination}",
+                    "cost": 500,
                     "safety_level": "high",
-                    "duration": "[USE DURATION FROM DATA]"
+                    "duration": "3 hours"
                 }}
             ],
             "accommodation": {{
-                "name": "[USE EXACT HOTEL NAME FROM DATA]",
+                "name": "Safe Hotel {request.destination.split(',')[0]}",
                 "type": "hotel",
-                "location": "[USE LOCATION FROM DATA]",
-                "cost": [USE COST FROM DATA],
-                "safety_rating": [USE RATING FROM DATA],
+                "location": "City Center",
+                "cost": {int(request.budget * 0.4 / request.duration)},
+                "safety_rating": 5,
                 "women_friendly": true,
-                "amenities": [USE AMENITIES FROM DATA]
+                "amenities": ["WiFi", "24/7 Security", "Women-Safe"]
             }},
             "meals": [
                 {{
-                    "meal": "breakfast",
-                    "restaurant": "[USE EXACT RESTAURANT NAME FROM DATA]",
-                    "cuisine": "[USE CUISINE FROM DATA]",
-                    "cost": [USE COST FROM DATA],
-                    "location": "[USE LOCATION FROM DATA]"
+                    "meal": "lunch",
+                    "restaurant": "Local Restaurant",
+                    "cuisine": "Regional",
+                    "cost": 400,
+                    "location": "City Center"
                 }}
             ],
-            "estimated_cost": [CALCULATE TOTAL DAY COST],
-            "safety_tips": [
-                "Use the hotel's recommended transportation",
-                "Stay in groups in crowded areas",
-                "Keep emergency contacts accessible",
-                {"Locate clean restrooms and nearby pharmacies" if request.period_friendly else "Share your itinerary with hotel concierge"}
-            ]
+            "estimated_cost": {int(request.budget / request.duration)},
+            "safety_tips": ["Use hotel transport", "Stay in groups", "Keep emergency contacts"]
         }}
     ],
-    "total_cost": [CALCULATE TOTAL ITINERARY COST],
+    "total_cost": {int(request.budget * 0.8)},
     "safety_score": 88,
     "community_experiences": [
         {{
-            "activity": "Local artisan workshop",
+            "activity": "Local workshop",
             "host": "Community partner",
             "cost": 800,
-            "impact": "Supports local families and traditional crafts"
+            "impact": "Supports local families"
         }}
     ]
 }}
 
-Create exactly {request.duration} days using the real data provided. Keep total cost under ₹{request.budget:,}."""
+Generate {request.duration} days. Budget limit ₹{request.budget:,}."""
 
     return base_prompt
 def generate_trip_prompt(request: TripRequest) -> str:
