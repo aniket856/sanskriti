@@ -56,30 +56,65 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Typography overrides */
+/* Typography - EaseMyTrip inspired */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Roboto', sans-serif;
   font-weight: 600;
-  line-height: 1.2;
+  line-height: 1.3;
+  color: var(--easemytrip-text);
 }
 
-/* Button hover effects */
-button {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.hero-title {
+  font-family: 'Playfair Display', serif; /* Keep hero title elegant */
 }
 
-button:hover {
-  transform: translateY(-1px);
+/* EaseMyTrip-style buttons */
+.btn-primary {
+  background: linear-gradient(135deg, var(--easemytrip-primary) 0%, var(--easemytrip-accent) 100%);
+  border: none;
+  color: white;
+  font-weight: 500;
+  padding: 12px 24px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
 }
 
-/* Card hover effects */
-.card-hover {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
 }
 
-.card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+.btn-secondary {
+  background: var(--easemytrip-secondary);
+  border: none;
+  color: white;
+  font-weight: 500;
+  padding: 12px 24px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.2);
+}
+
+.btn-secondary:hover {
+  background: #ea580c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(249, 115, 22, 0.3);
+}
+
+/* EaseMyTrip-style cards */
+.easemytrip-card {
+  background: var(--easemytrip-card);
+  border: 1px solid var(--easemytrip-border);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.easemytrip-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border-color: var(--easemytrip-primary);
 }
 
 /* Input focus states */
