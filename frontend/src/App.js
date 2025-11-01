@@ -198,17 +198,24 @@ const TripPlanner = () => {
             </CardDescription>
           </CardHeader>
 
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-8">
-              <div className="space-y-3">
-                <Label htmlFor="destination" className="text-lg font-semibold text-gray-700">
-                  Where would you like to go?
-                </Label>
-                <Select
+          <CardContent className="p-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Destination - EaseMyTrip style */}
+              <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                    <MapPin className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <Label className="text-lg font-semibold text-gray-800">Destination</Label>
+                    <p className="text-sm text-gray-600">Where would you like to go?</p>
+                  </div>
+                </div>
+                <Select 
                   value={formData.destination}
-                  onValueChange={(value) => setFormData({ ...formData, destination: value })}
+                  onValueChange={(value) => setFormData({...formData, destination: value})}
                 >
-                  <SelectTrigger className="w-full p-4 text-lg border-orange-200 focus:border-orange-500">
+                  <SelectTrigger className="w-full h-14 text-lg border-gray-300 focus:border-blue-500 bg-white">
                     <SelectValue placeholder="Choose your destination" />
                   </SelectTrigger>
                   <SelectContent>
