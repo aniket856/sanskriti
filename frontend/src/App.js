@@ -315,19 +315,26 @@ const TripPlanner = () => {
                 </div>
               </div>
 
-              <div className="bg-pink-50 p-6 rounded-lg border border-pink-200">
+              {/* Period-Friendly Option - EaseMyTrip style */}
+              <div className="bg-gradient-to-r from-pink-50 to-purple-50 p-6 rounded-lg border border-pink-200">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <Label className="text-lg font-semibold text-gray-700">
-                      Period-Friendly Planning
-                    </Label>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Include clean facilities, nearby pharmacies, and comfortable spaces
-                    </p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center">
+                      <Shield className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <Label className="text-lg font-semibold text-gray-800">
+                        Period-Friendly Planning
+                      </Label>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Include clean facilities, nearby pharmacies, and comfortable spaces
+                      </p>
+                    </div>
                   </div>
                   <Switch
                     checked={formData.period_friendly}
-                    onCheckedChange={(checked) => setFormData({ ...formData, period_friendly: checked })}
+                    onCheckedChange={(checked) => setFormData({...formData, period_friendly: checked})}
+                    className="data-[state=checked]:bg-pink-500"
                   />
                 </div>
               </div>
