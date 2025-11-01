@@ -226,21 +226,32 @@ const TripPlanner = () => {
                 </Select>
               </div>
 
-              <div className="space-y-4">
-                <Label className="text-lg font-semibold text-gray-700">
-                  Budget: ₹{formData.budget[0].toLocaleString('en-IN')}
-                </Label>
-                <Slider
-                  value={formData.budget}
-                  onValueChange={(value) => setFormData({ ...formData, budget: value })}
-                  max={100000}
-                  min={5000}
-                  step={2500}
-                  className="w-full"
-                />
-                <div className="flex justify-between text-sm text-gray-500">
-                  <span>₹5,000</span>
-                  <span>₹1,00,000</span>
+              {/* Budget - EaseMyTrip style */}
+              <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center">
+                    <span className="text-white font-bold">₹</span>
+                  </div>
+                  <div>
+                    <Label className="text-lg font-semibold text-gray-800">
+                      Budget: ₹{formData.budget[0].toLocaleString('en-IN')}
+                    </Label>
+                    <p className="text-sm text-gray-600">Set your travel budget</p>
+                  </div>
+                </div>
+                <div className="bg-white p-4 rounded-lg border">
+                  <Slider
+                    value={formData.budget}
+                    onValueChange={(value) => setFormData({...formData, budget: value})}
+                    max={100000}
+                    min={5000}
+                    step={2500}
+                    className="w-full"
+                  />
+                  <div className="flex justify-between text-sm text-gray-500 mt-2">
+                    <span>₹5,000</span>
+                    <span>₹1,00,000</span>
+                  </div>
                 </div>
               </div>
 
