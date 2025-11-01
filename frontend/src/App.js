@@ -622,10 +622,15 @@ const ItineraryDisplay = ({ itinerary }) => {
           </CardContent>
         </Card>
 
-        <Card className="mb-8 bg-white/90 backdrop-blur-sm border-orange-200 shadow-xl">
-          <CardHeader>
-            <CardTitle className="text-2xl text-orange-800 text-center">🎯 Book Your Trip Components</CardTitle>
-            <CardDescription className="text-center text-lg">Book each component separately or all at once</CardDescription>
+        {/* EaseMyTrip-style Booking Section */}
+        <Card className="mb-8 easemytrip-card">
+          <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-t-xl">
+            <CardTitle className="text-2xl font-semibold text-center flex items-center justify-center">
+              <span className="mr-3">🎯</span> Book Your Trip Components
+            </CardTitle>
+            <CardDescription className="text-center text-lg text-blue-100">
+              Book each component separately or all at once
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-3 gap-6 mb-6">
