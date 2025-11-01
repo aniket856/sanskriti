@@ -1,3 +1,6 @@
+import AIAdvisor from "./components/AIAdvisor";
+import WeatherInfo from "./components/WeatherInfo";
+import useAdaptiveBudget from "./hooks/useAdaptiveBudget";
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -13,44 +16,38 @@ import { Badge } from "./components/ui/badge";
 import { Separator } from "./components/ui/separator";
 import { Heart, Shield, MapPin, Clock, Utensils, Home, Star, Users, Leaf } from "lucide-react";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "";
 const API = `${BACKEND_URL}/api`;
 
 const LandingPage = () => {
   const [showPlanner, setShowPlanner] = useState(false);
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
-      {/* Hero Section */}
       <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1548013146-72479768bada?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHwxfHxJbmRpYSUyMHRyYXZlbHxlbnwwfHx8fDE3NTgzNjU1Njl8MA&ixlib=rb-4.1.0&q=85')`
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url('https://images.unsplash.com/photo-1548013146-72479768bada?crop=entropy&cs=srgb&fm=jpg&q=85')`
           }}
         />
-        
         <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
-          <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 tracking-tight">
-            संस्कृति
-          </h1>
+          <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 tracking-tight">संस्कृति</h1>
           <p className="text-xl md:text-2xl text-orange-100 mb-4 font-medium">
             AI-Powered Travel Planning for Indian Women
           </p>
           <p className="text-lg text-orange-200 mb-12 max-w-2xl mx-auto leading-relaxed">
             Discover India safely and authentically with personalized itineraries designed for solo female travelers
           </p>
-          
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button 
+            <Button
               onClick={() => setShowPlanner(true)}
-              size="lg" 
+              size="lg"
               className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-2xl transform transition-all duration-300 hover:scale-105"
             >
               <MapPin className="mr-2 h-5 w-5" />
               Plan Your Journey
             </Button>
-            
             <div className="flex items-center gap-4 text-white">
               <div className="flex items-center gap-2">
                 <Shield className="h-5 w-5 text-orange-300" />
@@ -64,15 +61,11 @@ const LandingPage = () => {
           </div>
         </div>
       </div>
-      
-      {/* Features Section */}
+
       {!showPlanner && (
         <div className="py-20 px-6">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl font-bold text-center text-gray-800 mb-16">
-              Why Choose Sanskriti?
-            </h2>
-            
+            <h2 className="text-4xl font-bold text-center text-gray-800 mb-16">Why Choose Sanskriti?</h2>
             <div className="grid md:grid-cols-3 gap-8">
               <Card className="text-center p-8 bg-white/80 backdrop-blur-sm border-orange-200 hover:shadow-xl transition-all duration-300">
                 <CardHeader>
@@ -81,11 +74,11 @@ const LandingPage = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600">
-                    Every recommendation prioritizes women's safety with verified accommodations and well-lit areas
+                    Every recommendation prioritizes women's safety with verified accommodations and well-lit areas.
                   </p>
                 </CardContent>
               </Card>
-              
+
               <Card className="text-center p-8 bg-white/80 backdrop-blur-sm border-orange-200 hover:shadow-xl transition-all duration-300">
                 <CardHeader>
                   <Heart className="h-12 w-12 text-orange-600 mx-auto mb-4" />
@@ -93,11 +86,11 @@ const LandingPage = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600">
-                    Thoughtful planning includes clean facilities, nearby pharmacies, and comfortable spaces
+                    Thoughtful planning includes clean facilities, nearby pharmacies, and comfortable spaces.
                   </p>
                 </CardContent>
               </Card>
-              
+
               <Card className="text-center p-8 bg-white/80 backdrop-blur-sm border-orange-200 hover:shadow-xl transition-all duration-300">
                 <CardHeader>
                   <Users className="h-12 w-12 text-orange-600 mx-auto mb-4" />
@@ -105,7 +98,7 @@ const LandingPage = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600">
-                    Support local families and artisans while experiencing authentic Indian culture
+                    Support local families and artisans while experiencing authentic Indian culture.
                   </p>
                 </CardContent>
               </Card>
@@ -113,7 +106,7 @@ const LandingPage = () => {
           </div>
         </div>
       )}
-      
+
       {showPlanner && <TripPlanner />}
     </div>
   );
@@ -121,24 +114,24 @@ const LandingPage = () => {
 
 const TripPlanner = () => {
   const [formData, setFormData] = useState({
-    destination: "Goa", // Set default destination
+    destination: "Goa",
     budget: [25000],
     duration: 3,
-    theme: "heritage", // Set default theme
+    theme: "heritage",
     travel_mode: "solo_female",
     period_friendly: false,
     special_preferences: ""
   });
-  
+
   const [itinerary, setItinerary] = useState(null);
   const [loading, setLoading] = useState(false);
-  
+
   const indianDestinations = [
     "Jaipur, Rajasthan", "Goa", "Kerala", "Rishikesh, Uttarakhand",
     "Udaipur, Rajasthan", "Hampi, Karnataka", "Manali, Himachal Pradesh",
     "Pushkar, Rajasthan", "Varanasi, Uttar Pradesh", "Mysore, Karnataka"
   ];
-  
+
   const themes = [
     { value: "heritage", label: "Heritage & Culture", icon: "🏛️" },
     { value: "spiritual", label: "Spiritual Journey", icon: "🕉️" },
@@ -146,12 +139,11 @@ const TripPlanner = () => {
     { value: "wellness", label: "Wellness & Yoga", icon: "🧘‍♀️" },
     { value: "culinary", label: "Culinary Experience", icon: "🍛" }
   ];
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted with data:", formData);
     setLoading(true);
-    
+
     try {
       const requestData = {
         destination: formData.destination,
@@ -162,11 +154,8 @@ const TripPlanner = () => {
         period_friendly: formData.period_friendly,
         special_preferences: formData.special_preferences
       };
-      
-      console.log("Sending request:", requestData);
+
       const response = await axios.post(`${API}/itinerary/generate`, requestData);
-      
-      console.log("Received response:", response.data);
       setItinerary(response.data);
     } catch (error) {
       console.error("Error generating itinerary:", error);
@@ -175,7 +164,7 @@ const TripPlanner = () => {
       setLoading(false);
     }
   };
-  
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 flex items-center justify-center">
@@ -187,11 +176,11 @@ const TripPlanner = () => {
       </div>
     );
   }
-  
+
   if (itinerary) {
     return <ItineraryDisplay itinerary={itinerary} />;
   }
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 py-12 px-6">
       <div className="max-w-4xl mx-auto">
@@ -202,17 +191,16 @@ const TripPlanner = () => {
               Tell us about your dream trip and we'll create the perfect itinerary
             </CardDescription>
           </CardHeader>
-          
+
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-8">
-              {/* Destination */}
               <div className="space-y-3">
                 <Label htmlFor="destination" className="text-lg font-semibold text-gray-700">
                   Where would you like to go?
                 </Label>
-                <Select 
+                <Select
                   value={formData.destination}
-                  onValueChange={(value) => setFormData({...formData, destination: value})}
+                  onValueChange={(value) => setFormData({ ...formData, destination: value })}
                 >
                   <SelectTrigger className="w-full p-4 text-lg border-orange-200 focus:border-orange-500">
                     <SelectValue placeholder="Choose your destination" />
@@ -224,15 +212,14 @@ const TripPlanner = () => {
                   </SelectContent>
                 </Select>
               </div>
-              
-              {/* Budget */}
+
               <div className="space-y-4">
                 <Label className="text-lg font-semibold text-gray-700">
                   Budget: ₹{formData.budget[0].toLocaleString('en-IN')}
                 </Label>
                 <Slider
                   value={formData.budget}
-                  onValueChange={(value) => setFormData({...formData, budget: value})}
+                  onValueChange={(value) => setFormData({ ...formData, budget: value })}
                   max={100000}
                   min={5000}
                   step={2500}
@@ -243,8 +230,7 @@ const TripPlanner = () => {
                   <span>₹1,00,000</span>
                 </div>
               </div>
-              
-              {/* Duration */}
+
               <div className="space-y-3">
                 <Label htmlFor="duration" className="text-lg font-semibold text-gray-700">
                   Duration (days)
@@ -254,12 +240,11 @@ const TripPlanner = () => {
                   min="1"
                   max="14"
                   value={formData.duration}
-                  onChange={(e) => setFormData({...formData, duration: parseInt(e.target.value)})}
+                  onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) })}
                   className="w-full p-4 text-lg border-orange-200 focus:border-orange-500"
                 />
               </div>
-              
-              {/* Theme */}
+
               <div className="space-y-4">
                 <Label className="text-lg font-semibold text-gray-700">
                   What's your travel theme?
@@ -269,11 +254,11 @@ const TripPlanner = () => {
                     <Card
                       key={theme.value}
                       className={`cursor-pointer transition-all duration-300 hover:shadow-md ${
-                        formData.theme === theme.value 
-                          ? 'bg-orange-100 border-orange-500 shadow-md' 
+                        formData.theme === theme.value
+                          ? 'bg-orange-100 border-orange-500 shadow-md'
                           : 'bg-white border-gray-200 hover:border-orange-300'
                       }`}
-                      onClick={() => setFormData({...formData, theme: theme.value})}
+                      onClick={() => setFormData({ ...formData, theme: theme.value })}
                     >
                       <CardContent className="p-4 text-center">
                         <div className="text-2xl mb-2">{theme.icon}</div>
@@ -283,8 +268,7 @@ const TripPlanner = () => {
                   ))}
                 </div>
               </div>
-              
-              {/* Period-Friendly Option */}
+
               <div className="bg-pink-50 p-6 rounded-lg border border-pink-200">
                 <div className="flex items-center justify-between">
                   <div>
@@ -297,12 +281,11 @@ const TripPlanner = () => {
                   </div>
                   <Switch
                     checked={formData.period_friendly}
-                    onCheckedChange={(checked) => setFormData({...formData, period_friendly: checked})}
+                    onCheckedChange={(checked) => setFormData({ ...formData, period_friendly: checked })}
                   />
                 </div>
               </div>
-              
-              {/* Special Preferences */}
+
               <div className="space-y-3">
                 <Label className="text-lg font-semibold text-gray-700">
                   Any special preferences or requirements?
@@ -312,12 +295,12 @@ const TripPlanner = () => {
                   rows="3"
                   placeholder="e.g., vegetarian food only, avoid crowded places, photography focus..."
                   value={formData.special_preferences}
-                  onChange={(e) => setFormData({...formData, special_preferences: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, special_preferences: e.target.value })}
                 />
               </div>
-              
-              <Button 
-                type="submit" 
+
+              <Button
+                type="submit"
                 className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 text-lg font-semibold rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl"
               >
                 <MapPin className="mr-2 h-5 w-5" />
@@ -335,38 +318,47 @@ const ItineraryDisplay = ({ itinerary }) => {
   const [bookingStatus, setBookingStatus] = useState({
     hotels: false,
     transport: false,
-    experiences: false
+    experiences: false,
+    cabs: false,
+    flights: false
   });
-  
+
   const [showExperienceModal, setShowExperienceModal] = useState(false);
-  
+
+  // Option B: keep localStorage but clear it on load so booking resets after refresh
   useEffect(() => {
-    // Load booking status from localStorage
+    localStorage.removeItem("yatra_booking_status");
+    // if you want to keep a session-level cache you could implement sessionStorage instead
+  }, []);
+
+  useEffect(() => {
     const savedStatus = localStorage.getItem('yatra_booking_status');
     if (savedStatus) {
-      setBookingStatus(JSON.parse(savedStatus));
+      try {
+        setBookingStatus(JSON.parse(savedStatus));
+      } catch (e) {
+        // ignore parse errors
+      }
     }
   }, []);
-  
+
   const updateBookingStatus = (type) => {
     const newStatus = { ...bookingStatus, [type]: true };
     setBookingStatus(newStatus);
     localStorage.setItem('yatra_booking_status', JSON.stringify(newStatus));
   };
-  
+
   const calculateDetailedCosts = () => {
     const accommodationCost = itinerary.days.reduce((total, day) => total + (day.accommodation?.cost || 0), 0);
-    const experiencesCost = itinerary.days.reduce((total, day) => 
+    const experiencesCost = itinerary.days.reduce((total, day) =>
       total + day.activities.reduce((dayTotal, activity) => dayTotal + (activity.cost || 0), 0), 0
     );
-    const foodCost = itinerary.days.reduce((total, day) => 
+    const foodCost = itinerary.days.reduce((total, day) =>
       total + day.meals.reduce((mealTotal, meal) => mealTotal + (meal.cost || 0), 0), 0
     );
-    const transportCost = Math.max(1000, itinerary.total_cost * 0.2); // Estimate 20% for transport
-    
+    const transportCost = Math.max(1000, Math.round((itinerary.total_cost || 0) * 0.2));
     const totalCost = accommodationCost + experiencesCost + foodCost + transportCost;
-    const communityBenefit = Math.round(totalCost * 0.6); // 60% to community
-    
+    const communityBenefit = Math.round(totalCost * 0.6);
     return {
       accommodation: accommodationCost,
       experiences: experiencesCost,
@@ -376,39 +368,48 @@ const ItineraryDisplay = ({ itinerary }) => {
       communityBenefit
     };
   };
-  
-  const costs = calculateDetailedCosts();
+
+  const costs = useAdaptiveBudget(itinerary, calculateDetailedCosts());
   const completedBookings = Object.values(bookingStatus).filter(Boolean).length;
-  
+
   const generateBookingUrls = () => {
-    const destination = encodeURIComponent(itinerary.destination);
-    const startDate = new Date().toISOString().split('T')[0]; // Today's date as placeholder
-    const endDate = new Date(Date.now() + itinerary.duration * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-    
+    // Option 1: open EaseMyTrip main pages (no prefill)
     return {
-      hotels: `https://www.easemytrip.com/hotels/?destination=${destination}&checkin=${startDate}&checkout=${endDate}`,
-      trains: 'https://www.irctc.co.in',
-      flights: `https://www.easemytrip.com/flights/?from=Delhi&to=${destination}&depart=${startDate}&return=${endDate}&travellers=1&class=Economy&trip=2`
+      hotels: "https://www.easemytrip.com/hotels/",
+      flights: "https://www.easemytrip.com/flights.html",
+      buses: "https://www.easemytrip.com/bus/",
+      cabs: "https://www.easemytrip.com/cabs/",
+      packages: "https://www.easemytrip.com/holidays.html"
     };
   };
-  
+
   const bookingUrls = generateBookingUrls();
-  
+
   const handleBooking = (type, url) => {
-    window.open(url, '_blank');
-    setTimeout(() => {
-      updateBookingStatus(type);
-    }, 1000);
+    try {
+      if (!url) {
+        alert(`Booking link not available for ${type}`);
+        return;
+      }
+      const newTab = window.open(url, "_blank", "noopener,noreferrer");
+      if (newTab) {
+        updateBookingStatus(type);
+      } else {
+        alert("Please allow pop-ups in your browser to continue booking.");
+      }
+    } catch (error) {
+      console.error("Error opening booking link:", error);
+      alert("Something went wrong while opening booking page.");
+    }
   };
-  
+
   const generateWhatsAppMessage = (activity, date) => {
-    return `Hi, I'm interested in booking "${activity}" on ${date} through Yatra app. Can you confirm availability and provide more details?`;
+    return `Hi, I'm interested in booking "${activity}" on ${date} through Sanskriti app. Can you confirm availability and provide more details?`;
   };
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 py-12 px-6">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
         <Card className="mb-8 bg-white/90 backdrop-blur-sm border-orange-200 shadow-2xl">
           <CardHeader className="text-center">
             <CardTitle className="text-4xl font-bold text-orange-800">
@@ -417,11 +418,11 @@ const ItineraryDisplay = ({ itinerary }) => {
             <CardDescription className="text-lg text-gray-600 mt-2">
               {itinerary.duration} days • ₹{costs.total.toLocaleString('en-IN')} • {itinerary.theme} theme
             </CardDescription>
-            
+
             <div className="flex justify-center gap-4 mt-6">
               <Badge variant="secondary" className="bg-green-100 text-green-800 px-4 py-2">
                 <Shield className="h-4 w-4 mr-2" />
-                Safety Score: {itinerary.safety_score}%
+                Safety Score: {itinerary.safety_score ?? 80}%
               </Badge>
               {itinerary.period_friendly && (
                 <Badge variant="secondary" className="bg-pink-100 text-pink-800 px-4 py-2">
@@ -430,13 +431,12 @@ const ItineraryDisplay = ({ itinerary }) => {
                 </Badge>
               )}
               <Badge variant="secondary" className="bg-blue-100 text-blue-800 px-4 py-2">
-                Bookings: {completedBookings}/3 Complete
+                Bookings: {completedBookings}/{Object.keys(bookingStatus).length} Complete
               </Badge>
             </div>
           </CardHeader>
         </Card>
-        
-        {/* Detailed Cost Breakdown Table */}
+
         <Card className="mb-8 bg-white/90 backdrop-blur-sm border-orange-200 shadow-xl">
           <CardHeader>
             <CardTitle className="text-2xl text-orange-800 flex items-center">
@@ -449,8 +449,7 @@ const ItineraryDisplay = ({ itinerary }) => {
                 <div className="text-center text-lg font-bold text-gray-800 mb-4 pb-2 border-b">
                   💰 TRIP COST BREAKDOWN
                 </div>
-                
-                {/* Accommodation */}
+
                 <div className="mb-4">
                   <div className="font-semibold text-gray-700 mb-2">ACCOMMODATION ({itinerary.duration} nights)</div>
                   {itinerary.days.map((day, index) => (
@@ -460,8 +459,7 @@ const ItineraryDisplay = ({ itinerary }) => {
                     </div>
                   ))}
                 </div>
-                
-                {/* Transport */}
+
                 <div className="mb-4">
                   <div className="font-semibold text-gray-700 mb-2">TRANSPORT</div>
                   <div className="ml-4 text-gray-600 flex justify-between">
@@ -477,21 +475,19 @@ const ItineraryDisplay = ({ itinerary }) => {
                     <span>₹{Math.round(costs.transport * 0.2).toLocaleString('en-IN')}</span>
                   </div>
                 </div>
-                
-                {/* Experiences */}
+
                 <div className="mb-4">
                   <div className="font-semibold text-gray-700 mb-2">EXPERIENCES & ACTIVITIES</div>
-                  {itinerary.days.slice(0, 3).map((day) => 
+                  {itinerary.days.slice(0, 3).map((day) =>
                     day.activities.map((activity, idx) => (
-                      <div key={idx} className="ml-4 text-gray-600 flex justify-between">
+                      <div key={`${day.day}-${idx}`} className="ml-4 text-gray-600 flex justify-between">
                         <span>├─ {activity.activity}</span>
                         <span>₹{(activity.cost || 0).toLocaleString('en-IN')}</span>
                       </div>
                     ))
                   )}
                 </div>
-                
-                {/* Food */}
+
                 <div className="mb-4">
                   <div className="font-semibold text-gray-700 mb-2">FOOD ({itinerary.duration} days)</div>
                   <div className="ml-4 text-gray-600 flex justify-between">
@@ -507,13 +503,13 @@ const ItineraryDisplay = ({ itinerary }) => {
                     <span>₹{Math.round(costs.food * 0.3).toLocaleString('en-IN')}</span>
                   </div>
                 </div>
-                
+
                 <div className="border-t border-gray-300 pt-3 mt-4">
                   <div className="flex justify-between font-bold text-lg text-gray-800 mb-4">
                     <span>TOTAL TRIP COST:</span>
                     <span>₹{costs.total.toLocaleString('en-IN')}</span>
                   </div>
-                  
+
                   <div className="bg-green-50 p-3 rounded border border-green-200">
                     <div className="font-semibold text-green-800 mb-2">🏘️ COMMUNITY IMPACT:</div>
                     <div className="flex justify-between text-green-700 font-semibold mb-2">
@@ -521,7 +517,7 @@ const ItineraryDisplay = ({ itinerary }) => {
                       <span>₹{costs.communityBenefit.toLocaleString('en-IN')}</span>
                     </div>
                     <div className="text-sm text-green-600 mb-2">(60% of your spending)</div>
-                    
+
                     <div className="text-sm text-green-700">
                       <div className="font-medium mb-1">Your trip will benefit:</div>
                       <div>→ Local Homestay Families</div>
@@ -530,99 +526,77 @@ const ItineraryDisplay = ({ itinerary }) => {
                     </div>
                   </div>
                 </div>
+
               </div>
             </div>
           </CardContent>
         </Card>
-        
-        {/* Booking Buttons Section */}
+
         <Card className="mb-8 bg-white/90 backdrop-blur-sm border-orange-200 shadow-xl">
           <CardHeader>
-            <CardTitle className="text-2xl text-orange-800 text-center">
-              🎯 Book Your Trip Components
-            </CardTitle>
-            <CardDescription className="text-center text-lg">
-              Book each component separately or all at once
-            </CardDescription>
+            <CardTitle className="text-2xl text-orange-800 text-center">🎯 Book Your Trip Components</CardTitle>
+            <CardDescription className="text-center text-lg">Book each component separately or all at once</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-3 gap-6 mb-6">
-              {/* Book Hotels Button */}
               <div className="space-y-3">
-                <Button 
+                <Button
                   onClick={() => handleBooking('hotels', bookingUrls.hotels)}
                   className="w-full h-16 bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-semibold rounded-lg shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
                   disabled={bookingStatus.hotels}
                 >
-                  {bookingStatus.hotels ? (
-                    <>
-                      ✅ Hotels Booked
-                    </>
-                  ) : (
+                  {bookingStatus.hotels ? '✅ Hotels Booked' : (
                     <>
                       🏨 BOOK HOTELS<br />
                       <span className="text-sm">(₹{costs.accommodation.toLocaleString('en-IN')})</span>
                     </>
                   )}
                 </Button>
-                <p className="text-xs text-gray-600 text-center">
-                  Opens EaseMyTrip with your dates pre-filled
-                </p>
+                <p className="text-xs text-gray-600 text-center">Opens EaseMyTrip with your dates pre-filled</p>
               </div>
-              
-              {/* Book Transport Button */}
+
               <div className="space-y-3">
                 <div className="space-y-2">
-                  <Button 
-                    onClick={() => handleBooking('transport', bookingUrls.trains)}
-                    className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg shadow-lg transform transition-all duration-300 hover:scale-105"
-                    disabled={bookingStatus.transport}
-                  >
-                    {bookingStatus.transport ? '✅ Transport Booked' : '🚂 Book Train Tickets'}
-                  </Button>
-                  <Button 
+                  <Button
                     onClick={() => handleBooking('transport', bookingUrls.flights)}
                     className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg shadow-lg transform transition-all duration-300 hover:scale-105"
                     disabled={bookingStatus.transport}
                   >
-                    ✈️ Book Flight Tickets
+                    {bookingStatus.transport ? '✅ Transport Booked' : '🚂 Book Train/Flight Tickets'}
+                  </Button>
+                  <Button
+                    onClick={() => handleBooking('flights', bookingUrls.flights)}
+                    className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg shadow-lg transform transition-all duration-300 hover:scale-105"
+                    disabled={bookingStatus.flights}
+                  >
+                    {bookingStatus.flights ? '✅ Flights Booked' : '✈️ Book Flight Tickets'}
                   </Button>
                 </div>
-                <p className="text-xs text-gray-600 text-center">
-                  Total Transport: ₹{costs.transport.toLocaleString('en-IN')}
-                </p>
+                <p className="text-xs text-gray-600 text-center">Total Transport: ₹{costs.transport.toLocaleString('en-IN')}</p>
               </div>
-              
-              {/* Book Experiences Button */}
+
               <div className="space-y-3">
-                <Button 
+                <Button
                   onClick={() => setShowExperienceModal(true)}
                   className="w-full h-16 bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-semibold rounded-lg shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
                   disabled={bookingStatus.experiences}
                 >
-                  {bookingStatus.experiences ? (
-                    <>
-                      ✅ Experiences Booked
-                    </>
-                  ) : (
+                  {bookingStatus.experiences ? '✅ Experiences Booked' : (
                     <>
                       🎨 BOOK EXPERIENCES<br />
                       <span className="text-sm">(₹{costs.experiences.toLocaleString('en-IN')})</span>
                     </>
                   )}
                 </Button>
-                <p className="text-xs text-gray-600 text-center">
-                  Contact local hosts via WhatsApp
-                </p>
+                <p className="text-xs text-gray-600 text-center">Contact local hosts via WhatsApp</p>
               </div>
             </div>
-            
-            {/* Book All at Once Button */}
+
             <div className="text-center mb-6">
-              <Button 
+              <Button
                 onClick={() => {
                   handleBooking('hotels', bookingUrls.hotels);
-                  setTimeout(() => handleBooking('transport', bookingUrls.trains), 2000);
+                  setTimeout(() => handleBooking('transport', bookingUrls.flights), 2000);
                   setTimeout(() => setShowExperienceModal(true), 4000);
                 }}
                 className="bg-orange-600 hover:bg-orange-700 text-white text-lg font-semibold px-8 py-4 rounded-lg shadow-lg"
@@ -631,10 +605,9 @@ const ItineraryDisplay = ({ itinerary }) => {
                 🚀 Book All Components
               </Button>
             </div>
-            
-            {/* Proceed to Checkout Button */}
-            <div className="border-t pt-6">
-              <Button 
+
+                        <div className="border-t pt-6">
+              <Button
                 onClick={() => alert('Payment integration coming in next update! 🚧')}
                 className="w-full h-16 bg-blue-600 hover:bg-blue-700 text-white text-xl font-bold rounded-lg shadow-xl transform transition-all duration-300 hover:scale-105"
               >
@@ -643,9 +616,16 @@ const ItineraryDisplay = ({ itinerary }) => {
               </Button>
             </div>
           </CardContent>
-        </Card>
-        
-        {/* Community Impact */}
+        </Card>  {/* <-- IMPORTANT: close the Booking Buttons card here */}
+
+        {/* 🌦️ Weather Info */}
+        <WeatherInfo destination={itinerary.destination} />
+
+        {/* 🤖 AI Advisor */}
+        <AIAdvisor itinerary={itinerary} />
+
+
+
         <Card className="mb-8 bg-white/90 backdrop-blur-sm border-orange-200">
           <CardHeader>
             <CardTitle className="text-2xl text-orange-800 flex items-center">
@@ -656,39 +636,29 @@ const ItineraryDisplay = ({ itinerary }) => {
           <CardContent>
             <div className="grid md:grid-cols-3 gap-6 text-center">
               <div className="p-4 bg-green-50 rounded-lg">
-                <h3 className="text-2xl font-bold text-green-700">
-                  {itinerary.community_impact.families_benefited}
-                </h3>
+                <h3 className="text-2xl font-bold text-green-700">{itinerary.community_impact?.families_benefited ?? 0}</h3>
                 <p className="text-green-600">Local Families Supported</p>
               </div>
               <div className="p-4 bg-blue-50 rounded-lg">
-                <h3 className="text-2xl font-bold text-blue-700">
-                  ₹{costs.communityBenefit.toLocaleString('en-IN')}
-                </h3>
+                <h3 className="text-2xl font-bold text-blue-700">₹{costs.communityBenefit.toLocaleString('en-IN')}</h3>
                 <p className="text-blue-600">Community Investment</p>
               </div>
               <div className="p-4 bg-purple-50 rounded-lg">
-                <h3 className="text-2xl font-bold text-purple-700">
-                  60%
-                </h3>
+                <h3 className="text-2xl font-bold text-purple-700">60%</h3>
                 <p className="text-purple-600">Stays with Community</p>
               </div>
             </div>
           </CardContent>
         </Card>
-        
-        {/* Daily Itinerary */}
+
         <div className="space-y-6">
           {itinerary.days.map((day, index) => (
             <Card key={index} className="bg-white/90 backdrop-blur-sm border-orange-200">
               <CardHeader>
-                <CardTitle className="text-xl text-orange-800">
-                  Day {day.day} • ₹{day.estimated_cost.toLocaleString('en-IN')}
-                </CardTitle>
+                <CardTitle className="text-xl text-orange-800">Day {day.day} • ₹{(day.estimated_cost || 0).toLocaleString('en-IN')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-2 gap-6">
-                  {/* Activities */}
                   <div>
                     <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
                       <Clock className="h-4 w-4 mr-2" />
@@ -710,33 +680,28 @@ const ItineraryDisplay = ({ itinerary }) => {
                       ))}
                     </div>
                   </div>
-                  
-                  {/* Accommodation & Meals */}
+
                   <div>
                     <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
                       <Home className="h-4 w-4 mr-2" />
                       Stay & Meals
                     </h4>
-                    
-                    {/* Accommodation */}
+
                     <div className="p-3 bg-blue-50 rounded-lg mb-4">
                       <div className="flex justify-between items-start mb-2">
-                        <h5 className="font-medium text-gray-800">{day.accommodation.name}</h5>
-                        <Badge variant="outline">₹{day.accommodation.cost}</Badge>
+                        <h5 className="font-medium text-gray-800">{day.accommodation?.name || "Hotel"}</h5>
+                        <Badge variant="outline">₹{day.accommodation?.cost || 0}</Badge>
                       </div>
-                      <p className="text-sm text-gray-600 mb-2">{day.accommodation.location}</p>
+                      <p className="text-sm text-gray-600 mb-2">{day.accommodation?.location}</p>
                       <div className="flex items-center gap-2">
                         <Star className="h-3 w-3 text-yellow-500" />
-                        <span className="text-xs">Safety: {day.accommodation.safety_rating}/5</span>
-                        {day.accommodation.women_friendly && (
-                          <Badge variant="secondary" className="text-xs bg-pink-100 text-pink-800">
-                            Women-Friendly
-                          </Badge>
+                        <span className="text-xs">Safety: {day.accommodation?.safety_rating || 4}/5</span>
+                        {day.accommodation?.women_friendly && (
+                          <Badge variant="secondary" className="text-xs bg-pink-100 text-pink-800">Women-Friendly</Badge>
                         )}
                       </div>
                     </div>
-                    
-                    {/* Meals */}
+
                     <div className="space-y-2">
                       <h5 className="font-medium text-gray-700 flex items-center">
                         <Utensils className="h-4 w-4 mr-2" />
@@ -754,8 +719,7 @@ const ItineraryDisplay = ({ itinerary }) => {
                     </div>
                   </div>
                 </div>
-                
-                {/* Safety Tips */}
+
                 {day.safety_tips && day.safety_tips.length > 0 && (
                   <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
                     <h5 className="font-medium text-green-800 mb-2 flex items-center">
@@ -773,25 +737,16 @@ const ItineraryDisplay = ({ itinerary }) => {
             </Card>
           ))}
         </div>
-        
-        {/* Experience Booking Modal */}
+
         {showExperienceModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <Card className="w-full max-w-2xl max-h-[80vh] overflow-y-auto">
               <CardHeader>
                 <CardTitle className="text-2xl text-orange-800 flex items-center justify-between">
                   🎨 Book Experiences
-                  <Button 
-                    variant="ghost" 
-                    onClick={() => setShowExperienceModal(false)}
-                    className="text-gray-500 hover:text-gray-700"
-                  >
-                    ✕
-                  </Button>
+                  <Button variant="ghost" onClick={() => setShowExperienceModal(false)} className="text-gray-500 hover:text-gray-700">✕</Button>
                 </CardTitle>
-                <CardDescription>
-                  Contact local hosts directly via WhatsApp
-                </CardDescription>
+                <CardDescription>Contact local hosts directly via WhatsApp</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -799,9 +754,7 @@ const ItineraryDisplay = ({ itinerary }) => {
                     day.activities.map((activity, idx) => (
                       <div key={`${day.day}-${idx}`} className="border rounded-lg p-4 bg-gray-50">
                         <div className="flex items-start gap-4">
-                          <div className="w-16 h-16 bg-orange-200 rounded-lg flex items-center justify-center">
-                            🎯
-                          </div>
+                          <div className="w-16 h-16 bg-orange-200 rounded-lg flex items-center justify-center">🎯</div>
                           <div className="flex-1">
                             <h3 className="font-semibold text-gray-800">{activity.activity}</h3>
                             <p className="text-sm text-gray-600 mb-2">{activity.description}</p>
@@ -829,6 +782,7 @@ const ItineraryDisplay = ({ itinerary }) => {
             </Card>
           </div>
         )}
+
       </div>
     </div>
   );
@@ -847,3 +801,5 @@ function App() {
 }
 
 export default App;
+
+
