@@ -255,17 +255,25 @@ const TripPlanner = () => {
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <Label htmlFor="duration" className="text-lg font-semibold text-gray-700">
-                  Duration (days)
-                </Label>
+              {/* Duration - EaseMyTrip style */}
+              <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                    <Clock className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <Label className="text-lg font-semibold text-gray-800">Duration</Label>
+                    <p className="text-sm text-gray-600">How many days?</p>
+                  </div>
+                </div>
                 <Input
                   type="number"
                   min="1"
                   max="14"
                   value={formData.duration}
-                  onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) })}
-                  className="w-full p-4 text-lg border-orange-200 focus:border-orange-500"
+                  onChange={(e) => setFormData({...formData, duration: parseInt(e.target.value)})}
+                  className="w-full h-14 text-lg border-gray-300 focus:border-blue-500 bg-white"
+                  placeholder="Enter number of days"
                 />
               </div>
 
