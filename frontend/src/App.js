@@ -473,34 +473,58 @@ const ItineraryDisplay = ({ itinerary }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 py-12 px-6">
-      <div className="max-w-6xl mx-auto">
-        <Card className="mb-8 bg-white/90 backdrop-blur-sm border-orange-200 shadow-2xl">
-          <CardHeader className="text-center">
-            <CardTitle className="text-4xl font-bold text-orange-800">
-              Your Perfect Journey to {itinerary.destination}
-            </CardTitle>
-            <CardDescription className="text-lg text-gray-600 mt-2">
-              {itinerary.duration} days • ₹{costs.total.toLocaleString('en-IN')} • {itinerary.theme} theme
-            </CardDescription>
-
-            <div className="flex justify-center gap-4 mt-6">
-              <Badge variant="secondary" className="bg-green-100 text-green-800 px-4 py-2">
-                <Shield className="h-4 w-4 mr-2" />
-                Safety Score: {itinerary.safety_score ?? 80}%
-              </Badge>
-              {itinerary.period_friendly && (
-                <Badge variant="secondary" className="bg-pink-100 text-pink-800 px-4 py-2">
-                  <Heart className="h-4 w-4 mr-2" />
-                  Period-Friendly
-                </Badge>
-              )}
-              <Badge variant="secondary" className="bg-blue-100 text-blue-800 px-4 py-2">
-                Bookings: {completedBookings}/{Object.keys(bookingStatus).length} Complete
-              </Badge>
+    <div className="min-h-screen bg-gray-50 py-8 px-4">
+      <div className="max-w-7xl mx-auto">
+        {/* EaseMyTrip-style Header */}
+        <div className="mb-8">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-8 rounded-t-2xl">
+            <div className="text-center">
+              <h1 className="text-4xl font-bold mb-2">
+                Your Perfect Journey to {itinerary.destination}
+              </h1>
+              <p className="text-xl text-blue-100 mb-6">
+                {itinerary.duration} days • ₹{costs.total.toLocaleString('en-IN')} • {itinerary.theme} theme
+              </p>
+              
+              <div className="flex flex-wrap justify-center gap-3">
+                <div className="bg-green-500 text-white px-4 py-2 rounded-full flex items-center gap-2">
+                  <Shield className="h-4 w-4" />
+                  <span>Safety: {itinerary.safety_score ?? 80}%</span>
+                </div>
+                {itinerary.period_friendly && (
+                  <div className="bg-pink-500 text-white px-4 py-2 rounded-full flex items-center gap-2">
+                    <Heart className="h-4 w-4" />
+                    <span>Period-Friendly</span>
+                  </div>
+                )}
+                <div className="bg-orange-500 text-white px-4 py-2 rounded-full flex items-center gap-2">
+                  <span>Bookings: {completedBookings}/{Object.keys(bookingStatus).length}</span>
+                </div>
+              </div>
             </div>
-          </CardHeader>
-        </Card>
+          </div>
+          
+          <div className="bg-white p-6 rounded-b-2xl shadow-lg border-t-4 border-blue-500">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+              <div className="p-4">
+                <div className="text-2xl font-bold text-blue-600">₹{costs.total.toLocaleString('en-IN')}</div>
+                <div className="text-sm text-gray-600">Total Cost</div>
+              </div>
+              <div className="p-4">
+                <div className="text-2xl font-bold text-green-600">{itinerary.duration}</div>
+                <div className="text-sm text-gray-600">Days</div>
+              </div>
+              <div className="p-4">
+                <div className="text-2xl font-bold text-orange-600">{itinerary.community_impact.families_benefited}</div>
+                <div className="text-sm text-gray-600">Families Helped</div>
+              </div>
+              <div className="p-4">
+                <div className="text-2xl font-bold text-purple-600">60%</div>
+                <div className="text-sm text-gray-600">Community Impact</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <Card className="mb-8 bg-white/90 backdrop-blur-sm border-orange-200 shadow-xl">
           <CardHeader>
