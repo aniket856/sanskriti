@@ -182,13 +182,19 @@ const TripPlanner = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 py-12 px-6">
-      <div className="max-w-4xl mx-auto">
-        <Card className="bg-white/90 backdrop-blur-sm border-orange-200 shadow-2xl">
-          <CardHeader className="text-center pb-8">
-            <CardTitle className="text-3xl font-bold text-orange-800">Plan Your Solo Journey</CardTitle>
-            <CardDescription className="text-lg text-gray-600">
-              Tell us about your dream trip and we'll create the perfect itinerary
+    <div className="min-h-screen bg-gray-50 py-8 px-4">
+      <div className="max-w-5xl mx-auto">
+        {/* EaseMyTrip-style header */}
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">Plan Your Journey</h2>
+          <p className="text-gray-600 text-lg">Fill in your travel details to get personalized recommendations</p>
+        </div>
+        
+        <Card className="easemytrip-card">
+          <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-t-12">
+            <CardTitle className="text-2xl font-semibold">Trip Details</CardTitle>
+            <CardDescription className="text-blue-100">
+              Enter your preferences for a customized travel experience
             </CardDescription>
           </CardHeader>
 
