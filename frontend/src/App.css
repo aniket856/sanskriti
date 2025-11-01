@@ -17,11 +17,25 @@ body {
 
 .App {
   min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+/* EaseMyTrip-inspired color palette */
+:root {
+  --easemytrip-primary: #2563eb;    /* EaseMyTrip blue */
+  --easemytrip-secondary: #f97316;  /* EaseMyTrip orange */
+  --easemytrip-accent: #0ea5e9;     /* Light blue */
+  --easemytrip-success: #10b981;    /* Green */
+  --easemytrip-bg: #f8fafc;         /* Light background */
+  --easemytrip-card: #ffffff;       /* Card background */
+  --easemytrip-text: #1e293b;       /* Primary text */
+  --easemytrip-text-light: #64748b; /* Secondary text */
+  --easemytrip-border: #e2e8f0;     /* Borders */
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -29,12 +43,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ea580c;
-  border-radius: 4px;
+  background: var(--easemytrip-primary);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #dc2626;
+  background: var(--easemytrip-secondary);
 }
 
 /* Smooth scrolling */
