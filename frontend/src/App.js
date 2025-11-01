@@ -654,17 +654,17 @@ const ItineraryDisplay = ({ itinerary }) => {
                 <div className="space-y-2">
                   <Button
                     onClick={() => handleBooking('transport', bookingUrls.flights)}
-                    className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg shadow-lg transform transition-all duration-300 hover:scale-105"
+                    className="w-full h-12 btn-secondary font-semibold rounded-xl shadow-lg transform transition-all duration-300 hover:scale-105"
                     disabled={bookingStatus.transport}
                   >
-                    {bookingStatus.transport ? '✅ Transport Booked' : '🚂 Book Train/Flight Tickets'}
+                    {bookingStatus.transport ? '✅ Transport Booked' : '🚂 Book Train Tickets'}
                   </Button>
                   <Button
-                    onClick={() => handleBooking('flights', bookingUrls.flights)}
-                    className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg shadow-lg transform transition-all duration-300 hover:scale-105"
-                    disabled={bookingStatus.flights}
+                    onClick={() => handleBooking('transport', bookingUrls.flights)}
+                    className="w-full h-12 btn-secondary font-semibold rounded-xl shadow-lg transform transition-all duration-300 hover:scale-105"
+                    disabled={bookingStatus.transport}
                   >
-                    {bookingStatus.flights ? '✅ Flights Booked' : '✈️ Book Flight Tickets'}
+                    ✈️ Book Flight Tickets
                   </Button>
                 </div>
                 <p className="text-xs text-gray-600 text-center">Total Transport: ₹{costs.transport.toLocaleString('en-IN')}</p>
