@@ -687,27 +687,29 @@ const ItineraryDisplay = ({ itinerary }) => {
               </div>
             </div>
 
+            {/* Book All at Once Button - EaseMyTrip style */}
             <div className="text-center mb-6">
-              <Button
+              <Button 
                 onClick={() => {
                   handleBooking('hotels', bookingUrls.hotels);
-                  setTimeout(() => handleBooking('transport', bookingUrls.flights), 2000);
+                  setTimeout(() => handleBooking('transport', bookingUrls.trains), 2000);
                   setTimeout(() => setShowExperienceModal(true), 4000);
                 }}
-                className="bg-orange-600 hover:bg-orange-700 text-white text-lg font-semibold px-8 py-4 rounded-lg shadow-lg"
+                className="btn-secondary text-lg font-semibold px-12 py-4 rounded-xl shadow-xl hover:shadow-2xl transform transition-all duration-300 hover:scale-105"
                 disabled={completedBookings === 3}
               >
                 🚀 Book All Components
               </Button>
             </div>
-
-                        <div className="border-t pt-6">
-              <Button
+            
+            {/* Proceed to Checkout Button - EaseMyTrip style */}
+            <div className="border-t-2 border-gray-200 pt-8">
+              <Button 
                 onClick={() => alert('Payment integration coming in next update! 🚧')}
-                className="w-full h-16 bg-blue-600 hover:bg-blue-700 text-white text-xl font-bold rounded-lg shadow-xl transform transition-all duration-300 hover:scale-105"
+                className="w-full h-20 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-xl font-bold rounded-2xl shadow-2xl transform transition-all duration-300 hover:scale-105"
               >
                 💳 PROCEED TO CHECKOUT<br />
-                <span className="text-lg">Total: ₹{costs.total.toLocaleString('en-IN')}</span>
+                <span className="text-lg opacity-90">Total: ₹{costs.total.toLocaleString('en-IN')}</span>
               </Button>
             </div>
           </CardContent>
