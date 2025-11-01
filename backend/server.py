@@ -315,7 +315,7 @@ def get_fallback_accommodations(destination: str, budget_per_night: int, is_solo
     """Fallback accommodations with realistic names"""
     base_hotels = [
         {"name": f"Hotel Heritage {destination.split(',')[0]}", "type": "heritage hotel", "rating": 4.2},
-        {"name": f"Safe Haven Guest House", "type": "guesthouse", "rating": 4.5},
+        {"name": "Safe Haven Guest House", "type": "guesthouse", "rating": 4.5},
         {"name": f"{destination.split(',')[0]} Palace Hotel", "type": "palace hotel", "rating": 4.0}
     ]
     
@@ -337,10 +337,10 @@ def get_fallback_restaurants(destination: str, meal_type: str, cuisine_preferenc
     """Fallback restaurants with realistic names"""
     base_restaurants = [
         {"name": f"Royal Kitchen {destination.split(',')[0]}", "cuisine": "North Indian"},
-        {"name": f"Spice Garden Restaurant", "cuisine": "Local Cuisine"},
-        {"name": f"Heritage Cafe", "cuisine": "Multi-cuisine"},
-        {"name": f"Traditional Thali House", "cuisine": "Regional"},
-        {"name": f"Women's Cooperative Restaurant", "cuisine": "Home-style"}
+        {"name": "Spice Garden Restaurant", "cuisine": "Local Cuisine"},
+        {"name": "Heritage Cafe", "cuisine": "Multi-cuisine"},
+        {"name": "Traditional Thali House", "cuisine": "Regional"},
+        {"name": "Women's Cooperative Restaurant", "cuisine": "Home-style"}
     ]
     
     restaurants = []
@@ -680,7 +680,7 @@ async def generate_itinerary(request: TripRequest):
                         },
                         {
                             "meal": "dinner",
-                            "restaurant": f"Women's Cooperative Restaurant", 
+                            "restaurant": "Women's Cooperative Restaurant", 
                             "cuisine": "Home-style Local",
                             "cost": 700,
                             "location": "Near Hotel"
