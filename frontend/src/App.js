@@ -835,6 +835,123 @@ const ItineraryDisplay = ({ itinerary }) => {
           ))}
         </div>
 
+        {/* Save and Share Options - EaseMyTrip style */}
+        <Card className="mb-8 easemytrip-card">
+          <CardContent className="p-6">
+            <div className="text-center mb-4">
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">Love Your Itinerary?</h3>
+              <p className="text-gray-600">Save it for later or share with friends!</p>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                onClick={() => {
+                  // Save to localStorage
+                  const savedItineraries = JSON.parse(localStorage.getItem('saved_itineraries') || '[]');
+                  const itineraryToSave = {
+                    id: itinerary.id || Date.now().toString(),
+                    destination: itinerary.destination,
+                    duration: itinerary.duration,
+                    budget: costs.total,
+                    saved_at: new Date().toISOString(),
+                    preview: `${itinerary.duration} days in ${itinerary.destination} for ₹${costs.total.toLocaleString('en-IN')}`
+                  };
+                  savedItineraries.push(itineraryToSave);
+                  localStorage.setItem('saved_itineraries', JSON.stringify(savedItineraries));
+                  alert('✅ Itinerary saved successfully!');
+                }}
+                size="lg" 
+                className="btn-primary px-8 py-3 text-lg rounded-xl"
+              >
+                💾 Save Itinerary
+              </Button>
+              
+              <Button 
+                onClick={() => {
+                  // Share functionality
+                  const shareText = `🌟 Check out my ${itinerary.duration}-day trip to ${itinerary.destination}!\n\n💰 Budget: ₹${costs.total.toLocaleString('en-IN')}\n🎯 Theme: ${itinerary.theme}\n🛡️ Safety Score: ${itinerary.safety_score}%\n\n✨ Planned with Sanskriti - AI travel planner for women!\n\n${window.location.href}`;
+                  
+                  if (navigator.share) {
+                    navigator.share({
+                      title: `My ${itinerary.destination} Trip Plan`,
+                      text: shareText,
+                      url: window.location.href
+                    });
+                  } else {
+                    // Fallback for browsers without native sharing
+                    navigator.clipboard.writeText(shareText).then(() => {
+                      alert('📋 Trip details copied to clipboard!');
+                    }).catch(() => {
+                      // Final fallback - WhatsApp share
+                      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+                      window.open(whatsappUrl, '_blank');
+                    });
+                  }
+                }}
+                variant="outline" 
+                size="lg" 
+                className="border-2 border-blue-500 text-blue-600 hover:bg-blue-50 px-8 py-3 text-lg rounded-xl"
+              >
+                📤 Share with Friends
+              </Button>
+              
+              <Button 
+                onClick={() => {
+                  // Download as PDF (simple version)
+                  const printWindow = window.open('', '_blank');
+                  printWindow.document.write(`
+                    <html>
+                      <head>
+                        <title>My ${itinerary.destination} Trip Plan</title>
+                        <style>
+                          body { font-family: Arial, sans-serif; margin: 20px; }
+                          .header { text-align: center; color: #2563eb; margin-bottom: 30px; }
+                          .day { margin-bottom: 20px; border: 1px solid #ddd; padding: 15px; }
+                          .cost { color: #059669; font-weight: bold; }
+                        </style>
+                      </head>
+                      <body>
+                        <div class="header">
+                          <h1>My ${itinerary.destination} Trip Plan</h1>
+                          <p>${itinerary.duration} days • ₹${costs.total.toLocaleString('en-IN')} • ${itinerary.theme} theme</p>
+                        </div>
+                        ${itinerary.days.map(day => `
+                          <div class="day">
+                            <h3>Day ${day.day}</h3>
+                            <p><strong>Activities:</strong></p>
+                            <ul>
+                              ${day.activities.map(activity => `<li>${activity.activity} - ₹${activity.cost}</li>`).join('')}
+                            </ul>
+                            <p><strong>Stay:</strong> ${day.accommodation.name} - ₹${day.accommodation.cost}</p>
+                            <p class="cost">Estimated Cost: ₹${day.estimated_cost.toLocaleString('en-IN')}</p>
+                          </div>
+                        `).join('')}
+                        <div style="text-align: center; margin-top: 30px;">
+                          <p><strong>Total Trip Cost: ₹${costs.total.toLocaleString('en-IN')}</strong></p>
+                          <p>Planned with ❤️ by Sanskriti</p>
+                        </div>
+                      </body>
+                    </html>
+                  `);
+                  printWindow.document.close();
+                  printWindow.print();
+                }}
+                variant="outline" 
+                size="lg" 
+                className="border-2 border-green-500 text-green-600 hover:bg-green-50 px-8 py-3 text-lg rounded-xl"
+              >
+                📄 Download PDF
+              </Button>
+            </div>
+            
+            <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="flex items-center justify-center gap-2 text-blue-700">
+                <Heart className="h-4 w-4" />
+                <span className="text-sm">Your trip supports {itinerary.community_impact.families_benefited} local families through community partnerships!</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
         {showExperienceModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <Card className="w-full max-w-2xl max-h-[80vh] overflow-y-auto">
