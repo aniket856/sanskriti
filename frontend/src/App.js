@@ -339,26 +339,38 @@ const TripPlanner = () => {
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <Label className="text-lg font-semibold text-gray-700">
-                  Any special preferences or requirements?
-                </Label>
+              {/* Special Preferences - EaseMyTrip style */}
+              <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center">
+                    <Users className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <Label className="text-lg font-semibold text-gray-800">
+                      Special Preferences
+                    </Label>
+                    <p className="text-sm text-gray-600">Any specific requirements?</p>
+                  </div>
+                </div>
                 <textarea
-                  className="w-full p-4 border border-orange-200 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200 resize-none"
+                  className="w-full p-4 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 resize-none bg-white"
                   rows="3"
                   placeholder="e.g., vegetarian food only, avoid crowded places, photography focus..."
                   value={formData.special_preferences}
-                  onChange={(e) => setFormData({ ...formData, special_preferences: e.target.value })}
+                  onChange={(e) => setFormData({...formData, special_preferences: e.target.value})}
                 />
               </div>
-
-              <Button
-                type="submit"
-                className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 text-lg font-semibold rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl"
-              >
-                <MapPin className="mr-2 h-5 w-5" />
-                Generate My Perfect Itinerary
-              </Button>
+              
+              {/* Submit Button - EaseMyTrip style */}
+              <div className="pt-4">
+                <Button 
+                  type="submit" 
+                  className="w-full btn-primary py-6 text-xl font-semibold rounded-xl shadow-xl hover:shadow-2xl"
+                >
+                  <MapPin className="mr-3 h-6 w-6" />
+                  Generate My Perfect Itinerary
+                </Button>
+              </div>
             </form>
           </CardContent>
         </Card>
