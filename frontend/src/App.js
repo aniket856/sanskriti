@@ -277,24 +277,38 @@ const TripPlanner = () => {
                 />
               </div>
 
-              <div className="space-y-4">
-                <Label className="text-lg font-semibold text-gray-700">
-                  What's your travel theme?
-                </Label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {/* Theme - EaseMyTrip style */}
+              <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center">
+                    <Heart className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <Label className="text-lg font-semibold text-gray-800">Travel Theme</Label>
+                    <p className="text-sm text-gray-600">What's your travel style?</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   {themes.map((theme) => (
                     <Card
                       key={theme.value}
-                      className={`cursor-pointer transition-all duration-300 hover:shadow-md ${
-                        formData.theme === theme.value
-                          ? 'bg-orange-100 border-orange-500 shadow-md'
-                          : 'bg-white border-gray-200 hover:border-orange-300'
+                      className={`cursor-pointer transition-all duration-200 easemytrip-card ${
+                        formData.theme === theme.value 
+                          ? 'border-blue-500 bg-blue-50 shadow-lg ring-2 ring-blue-200' 
+                          : 'bg-white border-gray-200 hover:border-blue-300 hover:shadow-md'
                       }`}
-                      onClick={() => setFormData({ ...formData, theme: theme.value })}
+                      onClick={() => setFormData({...formData, theme: theme.value})}
                     >
                       <CardContent className="p-4 text-center">
-                        <div className="text-2xl mb-2">{theme.icon}</div>
-                        <p className="font-medium text-gray-700">{theme.label}</p>
+                        <div className="text-3xl mb-2">{theme.icon}</div>
+                        <p className={`font-medium ${
+                          formData.theme === theme.value ? 'text-blue-700' : 'text-gray-700'
+                        }`}>{theme.label}</p>
+                        {formData.theme === theme.value && (
+                          <div className="mt-2">
+                            <span className="inline-block w-2 h-2 bg-blue-500 rounded-full"></span>
+                          </div>
+                        )}
                       </CardContent>
                     </Card>
                   ))}
