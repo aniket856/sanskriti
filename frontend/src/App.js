@@ -673,13 +673,13 @@ const ItineraryDisplay = ({ itinerary }) => {
               <div className="space-y-3">
                 <Button
                   onClick={() => setShowExperienceModal(true)}
-                  className="w-full h-16 bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-semibold rounded-lg shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                  className="w-full h-16 btn-primary text-lg font-semibold rounded-xl shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
                   disabled={bookingStatus.experiences}
                 >
                   {bookingStatus.experiences ? '✅ Experiences Booked' : (
                     <>
                       🎨 BOOK EXPERIENCES<br />
-                      <span className="text-sm">(₹{costs.experiences.toLocaleString('en-IN')})</span>
+                      <span className="text-sm opacity-90">(₹{costs.experiences.toLocaleString('en-IN')})</span>
                     </>
                   )}
                 </Button>
