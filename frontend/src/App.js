@@ -526,13 +526,14 @@ const ItineraryDisplay = ({ itinerary }) => {
           </div>
         </div>
 
-        <Card className="mb-8 bg-white/90 backdrop-blur-sm border-orange-200 shadow-xl">
-          <CardHeader>
-            <CardTitle className="text-2xl text-orange-800 flex items-center">
-              💰 Trip Cost Breakdown
+        {/* EaseMyTrip-style Cost Breakdown */}
+        <Card className="mb-8 easemytrip-card">
+          <CardHeader className="bg-gradient-to-r from-green-600 to-green-700 text-white rounded-t-xl">
+            <CardTitle className="text-2xl font-semibold flex items-center">
+              <span className="mr-3">💰</span> Trip Cost Breakdown
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-0">
             <div className="bg-gray-50 p-6 rounded-lg font-mono text-sm">
               <div className="border border-gray-300 rounded-lg p-4 bg-white">
                 <div className="text-center text-lg font-bold text-gray-800 mb-4 pb-2 border-b">
