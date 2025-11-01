@@ -952,23 +952,34 @@ const ItineraryDisplay = ({ itinerary }) => {
             </div>
           </CardContent>
         </Card>
+        {/* Experience Booking Modal */}
         {showExperienceModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <Card className="w-full max-w-2xl max-h-[80vh] overflow-y-auto">
               <CardHeader>
-                <CardTitle className="text-2xl text-orange-800 flex items-center justify-between">
+                <CardTitle className="text-2xl text-blue-700 flex items-center justify-between">
                   🎨 Book Experiences
-                  <Button variant="ghost" onClick={() => setShowExperienceModal(false)} className="text-gray-500 hover:text-gray-700">✕</Button>
+                  <Button 
+                    variant="ghost" 
+                    onClick={() => setShowExperienceModal(false)}
+                    className="text-gray-500 hover:text-gray-700"
+                  >
+                    ✕
+                  </Button>
                 </CardTitle>
-                <CardDescription>Contact local hosts directly via WhatsApp</CardDescription>
+                <CardDescription>
+                  Contact local hosts directly via WhatsApp
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {itinerary.days.map((day) =>
                     day.activities.map((activity, idx) => (
-                      <div key={`${day.day}-${idx}`} className="border rounded-lg p-4 bg-gray-50">
+                      <div key={`${day.day}-${idx}`} className="border rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition-colors">
                         <div className="flex items-start gap-4">
-                          <div className="w-16 h-16 bg-orange-200 rounded-lg flex items-center justify-center">🎯</div>
+                          <div className="w-16 h-16 bg-blue-200 rounded-lg flex items-center justify-center">
+                            🎯
+                          </div>
                           <div className="flex-1">
                             <h3 className="font-semibold text-gray-800">{activity.activity}</h3>
                             <p className="text-sm text-gray-600 mb-2">{activity.description}</p>
@@ -983,7 +994,7 @@ const ItineraryDisplay = ({ itinerary }) => {
                               updateBookingStatus('experiences');
                               setShowExperienceModal(false);
                             }}
-                            className="bg-green-600 hover:bg-green-700 text-white"
+                            className="bg-green-600 hover:bg-green-700 text-white rounded-xl"
                           >
                             💬 WhatsApp
                           </Button>
